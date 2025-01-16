@@ -20,6 +20,17 @@ const editor = new EditorJS({
 
 })
 
+console.log('editor', editor)
+window.DRAPI.saveFile((value) => {
+    console.log('saveFile')
+    editor.save().then((outputData) => {
+        console.log
+            ('文章数据：', outputData)
+    }).catch((error) => {
+        console.log('保存失败：', error)
+    });
+}
+)
 
 document.addEventListener('DOMContentLoaded', async () => {
 

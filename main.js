@@ -1,7 +1,7 @@
 // main.js
 
 // Modules to control application life and create native browser window
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import path from 'node:path'
 
 const __filename = new URL(import.meta.url).pathname
@@ -19,12 +19,40 @@ const createWindow = () => {
         height: 600,
         show: false,
         webPreferences: {
+            nodeIntegration: true, //允许在渲染进程中直接使用 Node.js API
+            contextIsolation: true, //启用上下文隔 (提高安全性)
             preload: path.resolve('D:\\Desktop\\project\\Tabula', 'preload.mjs'),
-            nodeIntegration: true, // 确保 nodeIntegration 设置为 true
-            contextIsolation: false,
-            sandbox: false
+
         }
     })
+
+    // 定义菜单模板
+    const template = [
+        {
+            label: 'File',
+            submenu: [
+                {
+                    label: 'Save',
+                    accelerator: 'CmdOrCtrl+S', // 使用 Cmd+S (Mac) 或 Ctrl+S (Windows/Linux)
+                    click: () => {
+                        // 在这里添加保存文件的逻辑
+                        console.log('Save file clicked')
+                        mainWindow.webContents.send('save-file', 1);
+                    }
+                },
+                {
+                    label: 'Quit',
+                    accelerator: 'CmdOrCtrl+Q',
+                    click: () => {
+                        app.quit()
+                    }
+                }
+            ]
+        }
+    ]
+    // 构建并设置菜单
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
 
     // 加载 index.html
     mainWindow.loadFile('index.html')
