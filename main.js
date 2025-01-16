@@ -1,24 +1,39 @@
 // main.js
 
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('node:path')
+import { app, BrowserWindow } from 'electron'
+import path from 'node:path'
+
+const __filename = new URL(import.meta.url).pathname
+const __dirname = path.dirname(__filename)
+console.log(__dirname)
+console.log(path.resolve('D:\\Desktop\\project\\Tabula', 'preload.mjs'))
+
+
 
 const createWindow = () => {
     // Create the browser window.
+    console.log('createWindow')
     const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        show: false,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.resolve('D:\\Desktop\\project\\Tabula', 'preload.mjs'),
+            nodeIntegration: true, // 确保 nodeIntegration 设置为 true
+            contextIsolation: false,
+            sandbox: false
         }
     })
 
     // 加载 index.html
     mainWindow.loadFile('index.html')
+    mainWindow.on('ready-to-show', () => {
+        mainWindow.show()
+    })
 
     // 打开开发工具
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
 
 // 这段程序将会在 Electron 结束初始化

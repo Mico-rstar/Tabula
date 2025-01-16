@@ -12,12 +12,21 @@
   },
   "license": "MIT",
   "author": "tabula",
-  "type": "commonjs",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
   "devDependencies": {
+    "@editorjs/simple-image": "^1.6.0",
+    "@types/electron": "^1.6.12",
+    "@types/node": "^22.10.6",
     "electron": "^33.3.1"
+  },
+  "dependencies": {
+    "@editorjs/editorjs": "^2.30.7",
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/embed": "^2.7.6",
+    "@editorjs/header": "^2.8.8"
   }
 }
