@@ -3,13 +3,12 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import path from 'node:path'
-
-const __filename = new URL(import.meta.url).pathname
-const __dirname = path.dirname(__filename)
-console.log(__dirname)
-console.log(path.resolve('D:\\Desktop\\project\\Tabula', 'preload.mjs'))
+import url from 'url'
+//import path from 'path'
 
 
+let __filename = url.fileURLToPath(import.meta.url)
+let __dirname = path.dirname(__filename)
 
 const createWindow = () => {
     // Create the browser window.
@@ -21,7 +20,7 @@ const createWindow = () => {
         webPreferences: {
             nodeIntegration: true, //允许在渲染进程中直接使用 Node.js API
             contextIsolation: true, //启用上下文隔 (提高安全性)
-            preload: path.resolve('D:\\Desktop\\project\\Tabula', 'preload.mjs'),
+            preload: path.resolve(__dirname, 'preload.mjs'),
 
         }
     })
