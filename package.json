@@ -24,8 +24,8 @@
     "electron": "^33.3.1"
   },
   "dependencies": {
-    "@editorjs/editorjs": "^2.30.7",
     "@editorjs/checklist": "^1.6.0",
+    "@editorjs/editorjs": "^2.30.7",
     "@editorjs/embed": "^2.7.6",
     "@editorjs/header": "^2.8.8"
   }
