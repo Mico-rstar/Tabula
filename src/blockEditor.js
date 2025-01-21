@@ -4,8 +4,13 @@ import Header from './editor/header.mjs';
 import Embed from './editor/embed.mjs';
 import SimpleImage from "./editor/simple-image.mjs";
 import Checklist from './editor/checklist.mjs'
+import { messageHandlers } from './socket/msgHandler.mjs';
+import { sendMessageWithRetry, clearPendingMessage } from './socket/sender.mjs';
 
-const editor = new EditorJS({
+
+
+// 初始化编辑器
+export const editor = new EditorJS({
     holder: 'editorjs',
     tools: {
         header: Header,
@@ -57,25 +62,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+
+
+
+//WebSocket通信
 const ws = new WebSocket("ws://127.0.0.1:8888/");
-
 ws.onopen = function (event) {
-    console.log('websocket已连接');
-    sendMessage()
-};
+    console.log('websocket已连接', ws);
+    sendMessageWithRetry(ws, { type: 'test-from-client', data: {} });
 
+};
 ws.onmessage = function (event) {
-    console.log('收到服务端回复的消息：' + event.data);
+    try {
+        const obj = JSON.parse(event.data);
+        console.log('收到服务端的消息：', obj);
+        messageHandlers[obj.type](obj.data, ws, editor);
+
+        // 清除已处理的消息
+        if (obj.requestId) {
+            clearPendingMessage(obj.requestId);
+        }
+
+    } catch (e) { console.log("parse-serverinfo-err", e) }
 
 };
-
 ws.onclose = function (event) {
     alert("连接已关闭...");
 };
-
-function sendMessage() {
-    ws.send("hello server, I am client");
-}
-
-
 
