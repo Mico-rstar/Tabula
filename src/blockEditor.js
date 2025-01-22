@@ -5,7 +5,7 @@ import Embed from './editor/embed.mjs';
 import SimpleImage from "./editor/simple-image.mjs";
 import Checklist from './editor/checklist.mjs'
 import { messageHandlers } from './socket/msgHandler.mjs';
-import { sendMessageWithRetry, clearPendingMessage } from './socket/sender.mjs';
+import { sendMessageWithRetry } from './socket/sender.mjs';
 
 
 
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 //WebSocket通信
-const ws = new WebSocket("ws://127.0.0.1:8888/");
+const ws = new WebSocket("ws://127.0.0.1:5200/");
 ws.onopen = function (event) {
     console.log('websocket已连接', ws);
     sendMessageWithRetry(ws, { type: 'test-from-client', data: {} });
@@ -74,14 +74,9 @@ ws.onopen = function (event) {
 };
 ws.onmessage = function (event) {
     try {
-        const obj = JSON.parse(event.data);
-        console.log('收到服务端的消息：', obj);
-        messageHandlers[obj.type](obj.data, ws, editor);
-
-        // 清除已处理的消息
-        if (obj.requestId) {
-            clearPendingMessage(obj.requestId);
-        }
+        const data = JSON.parse(event.data);
+        console.log('收到服务端的消息：', data);
+        messageHandlers[data.type](data, ws, editor);
 
     } catch (e) { console.log("parse-serverinfo-err", e) }
 

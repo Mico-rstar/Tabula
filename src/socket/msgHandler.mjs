@@ -1,5 +1,4 @@
-
-
+import { clearPendingMessage } from "./sender.mjs";
 //msgHandlers
 export const messageHandlers = {
     "test": (data, ws, editor) => {
@@ -8,13 +7,22 @@ export const messageHandlers = {
     "getBlockID": (data, ws, editor) => {
         console.log('处理 getBlockID 消息:', data);
         const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
-        ws.send(JSON.stringify({
-            type: "reply",
-            data: id,
-            requestId: data.requestId
-        }))
+        confirm(ws, data.requestId)
     },
-    "reply": (data, ws, editor) => {
+    "confirm": (data, ws, editor) => {
         console.log('处理服务端回复消息:', data);
+        // 清除已处理的消息
+        if (data.requestId) {
+            clearPendingMessage(data.requestId);
+        }
     }
 };
+
+
+
+function confirm(ws, requestId) {
+    ws.send(JSON.stringify({
+        type: "confirm",
+        requestId: requestId
+    }))
+}
