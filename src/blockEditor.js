@@ -9,8 +9,9 @@ import { sendMessageWithRetry } from './socket/sender.mjs';
 
 
 
-// 初始化编辑器
-export const editor = new EditorJS({
+
+const editor = new EditorJS({
+
     holder: 'editorjs',
     tools: {
         header: Header,
@@ -25,7 +26,7 @@ export const editor = new EditorJS({
 
 
 })
-//editor.blocks.insert("text", data?: BlockToolData, config?: ToolConfig, index?: number, needToFocus?: boolean)
+
 
 console.log('editor', editor)
 window.DRAPI.saveFile((value) => {
@@ -40,6 +41,7 @@ window.DRAPI.saveFile((value) => {
 )
 
 document.addEventListener('DOMContentLoaded', async () => {
+
     const clearButton = document.getElementById('clear');
     clearButton.addEventListener('click', async () => {
         console.log('clear data')
