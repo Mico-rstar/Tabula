@@ -6,22 +6,26 @@ import SimpleImage from './editor/simple-image.mjs';
 import { messageHandlers } from './socket/msgHandler.mjs';
 import { sendMessageWithRetry } from './socket/sender.mjs';
 import Button from './editor/button.mjs';
-
-
+import MarkerTool from './editor/inlineTool.mjs';
 
 
 const editor = new EditorJS({
 
     holder: 'editorjs',
     tools: {
-        header: Header,
+        header: { class: Header, inlineToolbar: true },
+
         embed: Embed,
         checklist: {
             class: Checklist,
             inlineToolbar: true,
         },
         image: SimpleImage,
-        button: Button
+        button: Button,
+        mark: {
+            class: MarkerTool,
+            shortcut: 'CMD+M',
+        },
 
     }
 
