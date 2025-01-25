@@ -27,7 +27,7 @@ class Button {
         newButton.style.color = '#ffffff';
         newButton.style.cursor = 'pointer';
         newButton.style.width = '15%';
-        newButton.innerText = '新按钮';
+        newButton.innerText = this.data.btnText ? this.data.btnText : '新按钮';
 
         var settingButton = document.createElement('button');
         settingButton.style.display = 'None';
@@ -38,7 +38,6 @@ class Button {
         btnWrapper.appendChild(settingButton);
 
         // 容器
-
         var container = document.createElement('div');
         container.style.display = 'flex';
         container.style.flexDirection = 'column';
@@ -129,9 +128,11 @@ class Button {
     }
 
     save(blockContent) {
-        const btn = blockContent.querySelector('button');
+        const btn = blockContent.querySelector('div').querySelector('div');
+        //console.log(btn);
+
         return {
-            text: btn.innerHTML
+            btnText: btn.innerText
         };
     }
 
