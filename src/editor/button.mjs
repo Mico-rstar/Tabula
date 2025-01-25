@@ -1,21 +1,137 @@
 
+
+
 class Button {
     constructor({ data }) {
         this.data = data;
-        this.button = null;
     }
     render() {
-        this.button = document.createElement('button');
-        this.button.innerHTML = "click me";
-        this.button.addEventListener('click', () => {
-            console.log('clicked');
+        const wrapper = document.createElement('div');
+
+        var btnWrapper = document.createElement('div');
+        btnWrapper.style.display = 'flex';
+        btnWrapper.style.flexDirection = 'row';
+        //btnWrapper.style.backgroundColor = '#1b1b1b';
+        btnWrapper.style.padding = '20px';
+        btnWrapper.style.borderRadius = '8px';
+        btnWrapper.style.width = '400px';
+
+        // 新按钮
+        var newButton = document.createElement('div');
+        newButton.style.display = 'flex';
+        // newButton.style.alignItems = 'center';
+        newButton.style.backgroundColor = '#007aff';
+        newButton.style.padding = '10px';
+        newButton.style.borderRadius = '4px';
+        newButton.style.textAlign = 'center';
+        newButton.style.color = '#ffffff';
+        newButton.style.cursor = 'pointer';
+        newButton.style.width = '15%';
+        newButton.innerText = '新按钮';
+
+        var settingButton = document.createElement('button');
+        settingButton.style.display = 'None';
+        settingButton.style.textAlign = 'center';
+        settingButton.innerText = 'setting';
+
+        btnWrapper.appendChild(newButton);
+        btnWrapper.appendChild(settingButton);
+
+        // 容器
+
+        var container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.backgroundColor = '#1b1b1b';
+        container.style.padding = '20px';
+        container.style.borderRadius = '8px';
+        container.style.width = '400px';
+
+        // 顶部栏
+        var topBar = document.createElement('div');
+        topBar.style.display = 'flex';
+        topBar.style.alignItems = 'center';
+        topBar.style.marginBottom = '20px';
+
+
+        //topBar.appendChild(newButton);
+        container.appendChild(topBar);
+
+        // 时间
+        var timeSection = document.createElement('div');
+        timeSection.style.marginBottom = '20px';
+        // var timeLabel = document.createElement('div');
+        // timeLabel.style.color = '#888888';
+        // timeLabel.innerText = '时间';
+        var btnName = document.createElement('input');
+        btnName.style.display = 'flex';
+        btnName.style.alignItems = 'center';
+        btnName.style.backgroundColor = '#252525';
+        btnName.style.padding = '10px';
+        btnName.style.borderRadius = '4px';
+        btnName.style.color = '#ffffff';
+        btnName.style.cursor = 'pointer';
+        btnName.placeholder = '请输入按钮名称';
+        btnName.addEventListener('input', () => {
+            newButton.innerHTML = btnName.value ? btnName.value : 'click';
         });
-        return this.button;
+
+        //timeSection.appendChild(timeLabel);
+        timeSection.appendChild(btnName);
+        container.appendChild(timeSection);
+
+        // 执行
+        var executeSection = document.createElement('div');
+        var executeLabel = document.createElement('div');
+        executeLabel.style.color = '#888888';
+        executeLabel.innerText = '执行';
+        var executeButton = document.createElement('div');
+        executeButton.style.display = 'flex';
+        executeButton.style.alignItems = 'center';
+        executeButton.style.backgroundColor = '#252525';
+        executeButton.style.padding = '10px';
+        executeButton.style.borderRadius = '4px';
+        executeButton.style.color = '#ffffff';
+        executeButton.style.cursor = 'pointer';
+        executeButton.innerText = '新操作';
+
+        executeSection.appendChild(executeLabel);
+        executeSection.appendChild(executeButton);
+        container.appendChild(executeSection);
+
+        // 完成按钮
+        var completedButton = document.createElement('div');
+        completedButton.style.backgroundColor = '#007aff';
+        completedButton.style.color = '#ffffff';
+        completedButton.style.padding = '10px';
+        completedButton.style.borderRadius = '4px';
+        completedButton.style.marginTop = '20px';
+        completedButton.style.textAlign = 'center';
+        completedButton.style.cursor = 'pointer';
+        completedButton.innerText = '完成';
+
+        completedButton.addEventListener('click', () => {
+            container.style.display = 'none';
+            settingButton.style.display = 'flex';
+        });
+        settingButton.addEventListener('click', () => {
+            container.style.display = 'flex';
+            settingButton.style.display = 'none';
+        });
+
+        container.appendChild(completedButton);
+
+        wrapper.appendChild(btnWrapper);
+        wrapper.appendChild(container);
+
+        return wrapper;
+
     }
 
     save(blockContent) {
+        const btn = blockContent.querySelector('button');
         return {
-            text: button.innerHTML
+            text: btn.innerHTML
         };
     }
 
