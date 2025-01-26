@@ -7,6 +7,7 @@ import { messageHandlers } from './socket/msgHandler.mjs';
 import { sendMessageWithRetry } from './socket/sender.mjs';
 import Button from './editor/button.mjs';
 import MarkerTool from './editor/inlineTool.mjs';
+import MyBlockTune from './editor/blockTune.mjs';
 
 
 const editor = new EditorJS({
@@ -26,8 +27,10 @@ const editor = new EditorJS({
             class: MarkerTool,
             shortcut: 'CMD+M',
         },
+        myTune: MyBlockTune,
 
-    }
+    },
+    tunes: ['myTune']
 
 
 })
