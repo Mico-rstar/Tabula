@@ -1,25 +1,87 @@
-<!--index.html-->
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BlockSuite Example</title>
+        #sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            /* Initially hidden */
+            width: 300px;
+            height: 100%;
+            background-color: #2c3e50;
+            color: white;
+            transition: right 0.3s ease-in-out;
+            padding: 20px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        #content {
+            margin-right: 0;
+            transition: margin-right 0.3s ease-in-out;
+            padding: 20px;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: -40px;
+            width: 40px;
+            height: 40px;
+            background-color: #34495e;
+            border-radius: 50% 0 0 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            user-select: none;
+        }
+    </style>
 </head>
 
 <body>
 
-    <button id="clear">clear</button>
-    <button id="insert">insert</button>
-    <button id="getID">getIDs</button>
-    <div id="editorjs"></div>
+    <div id="sidebar">
+        <div class="toggle-btn" onclick="toggleSidebar()">☰</div>
+        <h2>Developer Tools</h2>
+        <p>This is a sidebar similar to developer tools.</p>
+        <!-- Add more tools and options here -->
+    </div>
+
+    <div id="content">
+        <button id="clear">clear</button>
+        <button id="insert">insert</button>
+        <button id="getID">getIDs</button>
+        <div id="editorjs"></div>
 
 
-    <script type="module" src="./src/blockEditor.js"></script>
+        <script type="module" src="./src/blockEditor.js"></script>
+    </div>
 
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+
+            if (sidebar.style.right === '-300px') {
+                sidebar.style.right = '0';
+                content.style.marginRight = '300px';
+            } else {
+                sidebar.style.right = '-300px';
+                content.style.marginRight = '0';
+            }
+        }
+    </script>
 
 </body>
 

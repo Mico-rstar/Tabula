@@ -22,7 +22,10 @@ const editor = new EditorJS({
             inlineToolbar: true,
         },
         image: SimpleImage,
-        button: Button,
+        button: {
+            class: Button,
+            data: {}
+        },
         mark: {
             class: MarkerTool,
             shortcut: 'CMD+M',
