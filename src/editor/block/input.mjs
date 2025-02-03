@@ -1,41 +1,30 @@
-
-
-
-class Button {
-    constructor({ data }) {
-        this.data = data;
+class Input {
+    static get toolbox() {
+        return {
+            title: 'Input',
+            icon: '<svg width="17" height="15" viewBox="0 0 336 276" xmlns="http://www.w3.org/2000/svg"><path d="M291 150V79c0-19-15-34-34-34H79c-19 0-34 15-34 34v42l67-44 81 72 56-29 42 30zm0 52l-43-30-56 30-81-67-66 39v23c0 19 15 34 34 34h178c17 0 31-13 34-29zM79 0h178c44 0 79 35 79 79v118c0 44-35 79-79 79H79c-44 0-79-35-79-79V79C0 35 35 0 79 0z"/></svg>'
+        };
     }
+
     render() {
         const wrapper = document.createElement('div');
 
-        var btnWrapper = document.createElement('div');
-        btnWrapper.style.display = 'flex';
-        btnWrapper.style.flexDirection = 'row';
-        //btnWrapper.style.backgroundColor = '#1b1b1b';
-        btnWrapper.style.padding = '20px';
-        btnWrapper.style.borderRadius = '8px';
-        btnWrapper.style.width = '400px';
+        const inputWrapper = document.createElement('div');
+        inputWrapper.style.flexDirection = 'row';
+        inputWrapper.style.display = 'flex';
+        inputWrapper.style.padding = '20px';
+        inputWrapper.style.borderRadius = '8px';
+        inputWrapper.style.width = '400px';
 
-        // 新按钮
-        var newButton = document.createElement('div');
-        newButton.style.display = 'flex';
-        // newButton.style.alignItems = 'center';
-        newButton.style.backgroundColor = '#007aff';
-        newButton.style.padding = '10px';
-        newButton.style.borderRadius = '4px';
-        newButton.style.textAlign = 'center';
-        newButton.style.color = '#ffffff';
-        newButton.style.cursor = 'pointer';
-        newButton.style.width = '15%';
-        newButton.innerText = this.data.btnText ? this.data.btnText : '新按钮';
+        const input = document.createElement('input');
 
-        var settingButton = document.createElement('button');
-        settingButton.style.display = 'None';
-        settingButton.style.textAlign = 'center';
-        settingButton.innerText = 'setting';
+        const settingButton = document.createElement('button');
+        settingButton.style.display = 'none';
+        settingButton.innerHTML = '⚙️';
 
-        btnWrapper.appendChild(newButton);
-        btnWrapper.appendChild(settingButton);
+        inputWrapper.appendChild(input);
+        inputWrapper.appendChild(settingButton);
+        wrapper.appendChild(inputWrapper);
 
         // 容器
         var container = document.createElement('div');
@@ -79,22 +68,8 @@ class Button {
         timeSection.appendChild(btnName);
         container.appendChild(timeSection);
 
-        // //执行
+        // 工作流下拉列表
         var executeSection = document.createElement('div');
-        // var selectElement = document.createElement('selection');
-        // var options = [
-        //     { value: 'value1', text: 'Option 1' },
-        //     { value: 'value2', text: 'Option 2' },
-        //     // 添加更多选项
-        // ];
-
-        // options.forEach(function (option) {
-        //     var optionElement = document.createElement('option');
-        //     optionElement.value = option.value;
-        //     optionElement.textContent = option.text;
-        //     selectElement.appendChild(optionElement);
-        // });
-
         var executeButton = document.createElement('select');
         executeButton.style.display = 'flex';
         executeButton.style.alignItems = 'center';
@@ -148,31 +123,16 @@ class Button {
         });
 
         container.appendChild(completedButton);
-
-        wrapper.appendChild(btnWrapper);
         wrapper.appendChild(container);
-
         return wrapper;
-
     }
 
     save(blockContent) {
-        const btn = blockContent.querySelector('div').querySelector('div');
-        //console.log(btn);
-
         return {
-            btnText: btn.innerText
-        };
-    }
-
-    static get toolbox() {
-        return {
-            title: 'Button',
-            icon: '<svg width="17" height="15" viewBox="0 0 336 276" xmlns="http://www.w3.org/2000/svg"><path d="M291 150V79c0-19-15-34-34-34H79c-19 0-34 15-34 34v42l67-44 81 72 56-29 42 30zm0 52l-43-30-56 30-81-67-66 39v23c0 19 15 34 34 34h178c17 0 31-13 34-29zM79 0h178c44 0 79 35 79 79v118c0 44-35 79-79 79H79c-44 0-79-35-79-79V79C0 35 35 0 79 0z"/></svg>'
-        };
+            content: blockContent.value
+        }
     }
 }
-
 export {
-    Button as default
+    Input as default
 };

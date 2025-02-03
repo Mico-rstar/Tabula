@@ -1,13 +1,14 @@
 import EditorJS from './editor/editorjs.mjs';
-import Header from './editor/header.mjs';
-import Embed from './editor/embed.mjs';
-import Checklist from './editor/checklist.mjs'
-import SimpleImage from './editor/simple-image.mjs';
+import Header from './editor/block/header.mjs';
+import Embed from './editor/block/embed.mjs';
+import Checklist from './editor/block/checklist.mjs'
+import SimpleImage from './editor/block/simple-image.mjs';
 import { messageHandlers } from './socket/msgHandler.mjs';
 import { sendMessageWithRetry } from './socket/sender.mjs';
-import Button from './editor/button.mjs';
+import Button from './editor/block/button.mjs';
 import MarkerTool from './editor/inlineTool.mjs';
 import MyBlockTune from './editor/blockTune.mjs';
+import Input from './editor/block/input.mjs'
 
 
 const editor = new EditorJS({
@@ -17,6 +18,7 @@ const editor = new EditorJS({
         header: { class: Header, inlineToolbar: true },
 
         embed: Embed,
+        input: Input,
         checklist: {
             class: Checklist,
             inlineToolbar: true,
