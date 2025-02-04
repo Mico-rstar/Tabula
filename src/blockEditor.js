@@ -6,9 +6,12 @@ import SimpleImage from './editor/block/simple-image.mjs';
 import { messageHandlers } from './socket/msgHandler.mjs';
 import { sendMessageWithRetry } from './socket/sender.mjs';
 import Button from './editor/block/button.mjs';
-import MarkerTool from './editor/inlineTool.mjs';
+import MarkerTool from './editor/inlineTool/inlineTool.mjs';
 import MyBlockTune from './editor/blockTune.mjs';
 import Input from './editor/block/input.mjs'
+import InlineCode from './editor/inlineTool/inline-code.mjs';
+import CodeTool from './editor/block/code.mjs';
+import EditorjsList from './editor/block/editorjs-list.mjs';
 
 
 const editor = new EditorJS({
@@ -28,9 +31,21 @@ const editor = new EditorJS({
             class: Button,
             data: {}
         },
+        list: {
+            class: EditorjsList,
+            inlineToolbar: true,
+            config: {
+                defaultStyle: 'unordered'
+            },
+        },
+        code: CodeTool,
         mark: {
             class: MarkerTool,
             shortcut: 'CMD+M',
+        },
+        inlineCode: {
+            class: InlineCode,
+            shortcut: 'CMD+SHIFT+M',
         },
         myTune: MyBlockTune,
 
