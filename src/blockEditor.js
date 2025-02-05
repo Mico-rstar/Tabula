@@ -8,12 +8,13 @@ import { messageHandlers } from './socket/msgHandler.mjs';
 import { sendMessageWithRetry } from './socket/sender.mjs';
 import Button from './editor/block/button.mjs';
 import MarkerTool from './editor/inlineTool/inlineTool.mjs';
-import MyBlockTune from './editor/blockTune.mjs';
+import MyBlockTune from './editor/blockTune/blockTune.mjs';
 import Input from './editor/block/input.mjs'
 import InlineCode from './editor/inlineTool/inline-code.mjs';
 import CodeTool from './editor/block/code.mjs';
 import EditorjsList from './editor/block/editorjs-list.mjs';
 
+const idIndexMap = {};
 
 const editor = new EditorJS({
 
@@ -89,7 +90,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     getIDButton.addEventListener('click', async () => {
         console.log('getID')
         const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
+        console.log(editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()))
         console.log('id', id)
+        getBlockIndexByID(id).then((index) => {
+            console.log('index', index)
+        })
     });
 });
 
@@ -115,4 +120,31 @@ ws.onmessage = function (event) {
 ws.onclose = function (event) {
     alert("连接已关闭...");
 };
+
+
+//建立id与index映射
+async function buildIdIndexMap(editor) {
+    return editor.save().then((outputData) => {
+        for (let i = 0; i < outputData.blocks.length; i++) {
+            const block = outputData.blocks[i];
+            // 将id与index映射保存到全局变量中
+            idIndexMap[block.id] = i;
+        }
+    }).catch((error) => {
+        console.log('保存失败：', error)
+    });
+}
+
+async function getBlockIndexByID(id) {
+
+    await buildIdIndexMap(editor);
+    if (idIndexMap[id] !== undefined) {
+        return idIndexMap[id];
+    } else {
+        console.log('id not found in idIndexMap');
+        return -1;
+    }
+
+
+}
 

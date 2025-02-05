@@ -8500,7 +8500,9 @@ class ht {
    * @public
    */
   validate(e) {
-    return !(e.text.trim() === "" && !this._preserveBlank);
+    //return !(e.text.trim() === "" && !this._preserveBlank);
+    return true;
+
   }
   /**
    * Extract Tool's data from the view
