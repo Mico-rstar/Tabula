@@ -1,3 +1,4 @@
 node_modules/
 dist/
 data/
+src/utils/test.txt

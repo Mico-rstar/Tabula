@@ -13,58 +13,83 @@ import InlineCode from './editor/inlineTool/inline-code.mjs';
 import CodeTool from './editor/block/code.mjs';
 import EditorjsList from './editor/block/editorjs-list.mjs';
 
+
 const idIndexMap = {};
 
-const editor = new EditorJS({
-
-    holder: 'editorjs',
-    tools: {
-        header: { class: Header, inlineToolbar: true },
-
-        embed: Embed,
-        input: Input,
-        checklist: {
-            class: Checklist,
-            inlineToolbar: true,
-        },
-        image: SimpleImage,
-        button: {
-            class: Button,
-            data: {}
-        },
-        list: {
-            class: EditorjsList,
-            inlineToolbar: true,
-            config: {
-                defaultStyle: 'unordered'
-            },
-        },
-        code: CodeTool,
-        mark: {
-            class: MarkerTool,
-            shortcut: 'CMD+M',
-        },
-        inlineCode: {
-            class: InlineCode,
-            shortcut: 'CMD+SHIFT+M',
-        },
-        myTune: MyBlockTune,
-
-    },
-    tunes: ['myTune']
-
-
-})
+var editor = {};
 
 
 console.log('editor', editor)
-window.DRAPI.saveFile((value) => {
+window.DRAPI.saveFile((dataDir) => {
     console.log('saveFile')
+    editor.clear()
     editor.save().then((outputData) => {
         console.log
-            ('文章数据：', outputData)
+            ('文章数据：', outputData);
+        //writeFile(dataDir, JSON.stringify(outputData))
+        console.log(dataDir);
+        window.DRAPI.write(dataDir, JSON.stringify(outputData)).then(() => {
+            console.log('File written successfully.');
+        }).catch((error) => {
+            console.log('写入文件失败：', error);
+        });
+
     }).catch((error) => {
         console.log('保存失败：', error)
+    });
+}
+)
+
+window.DRAPI.recoverFile((dataDir) => {
+    window.DRAPI.read(dataDir).then((outputData) => {
+        console.log('读取文件成功：', outputData);
+        const data = JSON.parse(outputData);
+        console.log(data);
+
+        // 在这里处理读取到的数据
+        editor = new EditorJS({
+
+            holder: 'editorjs',
+            tools: {
+                header: { class: Header, inlineToolbar: true },
+
+                embed: Embed,
+                input: Input,
+                checklist: {
+                    class: Checklist,
+                    inlineToolbar: true,
+                },
+                image: SimpleImage,
+                button: {
+                    class: Button,
+                    data: {}
+                },
+                list: {
+                    class: EditorjsList,
+                    inlineToolbar: true,
+                    config: {
+                        defaultStyle: 'unordered'
+                    },
+                },
+                code: CodeTool,
+                mark: {
+                    class: MarkerTool,
+                    shortcut: 'CMD+M',
+                },
+                inlineCode: {
+                    class: InlineCode,
+                    shortcut: 'CMD+SHIFT+M',
+                },
+                myTune: MyBlockTune,
+
+            },
+            tunes: ['myTune'],
+            data: data
+
+
+        })
+    }).catch((error) => {
+        console.log('读取文件失败：', error);
     });
 }
 )
