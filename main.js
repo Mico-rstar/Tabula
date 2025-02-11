@@ -4,11 +4,15 @@
 import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 import path from 'node:path'
 import url from 'url'
+import { writeFile, readFile } from './src/utils/FileOP.mjs'
 //import path from 'path'
 
 
 let __filename = url.fileURLToPath(import.meta.url)
 let __dirname = path.dirname(__filename)
+let __dataDir = path.join(__dirname, '/data/test.json')
+console.log('__data', __dataDir)
+
 
 const createWindow = () => {
     // Create the browser window.
@@ -36,7 +40,7 @@ const createWindow = () => {
                     click: () => {
                         // 在这里添加保存文件的逻辑
                         console.log('Save file clicked')
-                        mainWindow.webContents.send('save-file', 1);
+                        mainWindow.webContents.send('save-file', __dataDir);
                     }
                 },
                 {
@@ -45,7 +49,16 @@ const createWindow = () => {
                     click: () => {
                         app.quit()
                     }
-                }
+                },
+                {
+                    label: 'Recover File',
+                    accelerator: 'Ctrl+R',
+                    click: () => {
+                        // 在这里添加保存文件的逻辑
+                        console.log('Recover file clicked')
+                        mainWindow.webContents.send('recover-file', __dataDir);
+                    }
+                },
             ]
         }
     ]
@@ -85,5 +98,14 @@ app.on('window-all-closed', () => {
 
 // 在当前文件中你可以引入所有的主进程代码
 // 也可以拆分成几个文件，然后用 require 导入。
+
+//写入文件请求
+ipcMain.handle('writeFile', (event, filePath, data) => {
+    return writeFile(filePath, data);
+});
+
+ipcMain.handle('readFile', (event, filePath) => {
+    return readFile(filePath);
+});
 
 

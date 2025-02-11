@@ -2,8 +2,9 @@
 
 
 class Button {
-    constructor({ data }) {
-        this.data = data;
+    constructor({ data: t, config: e, api: a, readOnly: r }) {
+        this.data = t, this.config = e, this.api = a, this.readOnly = r;
+
     }
     render() {
         const wrapper = document.createElement('div');
@@ -81,50 +82,7 @@ class Button {
         timeSection.appendChild(btnName);
         container.appendChild(timeSection);
 
-        // //执行
-        var executeSection = document.createElement('div');
-        // var selectElement = document.createElement('selection');
-        // var options = [
-        //     { value: 'value1', text: 'Option 1' },
-        //     { value: 'value2', text: 'Option 2' },
-        //     // 添加更多选项
-        // ];
 
-        // options.forEach(function (option) {
-        //     var optionElement = document.createElement('option');
-        //     optionElement.value = option.value;
-        //     optionElement.textContent = option.text;
-        //     selectElement.appendChild(optionElement);
-        // });
-
-        var executeButton = document.createElement('select');
-        executeButton.style.display = 'flex';
-        executeButton.style.alignItems = 'center';
-        executeButton.style.backgroundColor = '#252525';
-        executeButton.style.padding = '10px';
-        executeButton.style.borderRadius = '4px';
-        executeButton.style.color = '#ffffff';
-        executeButton.style.cursor = 'pointer';
-        executeButton.innerText = '新操作';
-
-        var options = [
-            { value: '', text: 'default' },
-            { value: 'workflow1-id', text: 'workflow1' },
-            { value: 'workflow2-id', text: 'workflow2' }
-            // 添加更多选项
-        ];
-
-        options.forEach(function (option) {
-            var optionElement = document.createElement('option');
-            optionElement.value = option.value;
-            optionElement.textContent = option.text;
-            executeButton.appendChild(optionElement);
-        });
-
-
-        //executeSection.appendChild(selectElement);
-        executeSection.appendChild(executeButton);
-        container.appendChild(executeSection);
 
         // 完成按钮
         var completedButton = document.createElement('div');
@@ -145,9 +103,7 @@ class Button {
             container.style.display = 'flex';
             settingButton.style.display = 'none';
         });
-        executeButton.addEventListener('change', () => {
-            let value = executeButton.value ? executeButton.value : 'default';
-        });
+
 
         container.appendChild(completedButton);
 
@@ -160,7 +116,6 @@ class Button {
 
     save(blockContent) {
         const btn = blockContent.querySelector('div').querySelector('div');
-        //console.log(btn);
 
         return {
             btnText: btn.innerText
