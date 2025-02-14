@@ -16,7 +16,8 @@ import EditorjsList from './editor/block/editorjs-list.mjs';
 
 const idIndexMap = {};
 
-var editor = {};
+var editor = new EditorJS({
+});
 
 
 console.log('editor', editor)
@@ -46,6 +47,7 @@ window.DRAPI.recoverFile((dataDir) => {
         const data = JSON.parse(outputData);
         console.log(data);
 
+        editor.destroy()
         // 在这里处理读取到的数据
         editor = new EditorJS({
 
@@ -94,38 +96,59 @@ window.DRAPI.recoverFile((dataDir) => {
 }
 )
 
-// 封装获取指定索引块ID的函数
-function getBlockIdByIndex(index) {
-    const block = editor.blocks.getBlockByIndex(index);
-    return block ? block.id : null;
-}
+window.DRAPI.openFile((dataDir) => {
+    window.DRAPI.read(dataDir).then((outputData) => {
+        console.log('读取文件成功：', outputData);
+        const data = JSON.parse(outputData);
+        console.log(data);
 
-// 封装在指定索引位置插入块的函数
-function insertBlockAtIndex(type, data, index) {
-    editor.blocks.insert(type, data, {}, index, true);
-}
+        editor.destroy()
+        // 在这里处理读取到的数据
+        editor = new EditorJS({
 
-// 封装获取指定ID对应块位置的函数
-function getBlockIndexById(id) {
-    const blocks = editor.blocks.getBlocksCount();
-    for (let i = 0; i < blocks; i++) {
-        const block = editor.blocks.getBlockByIndex(i);
-        if (block && block.id === id) {
-            return i;
-        }
-    }
-    return -1; // 如果未找到返回-1
-}
+            holder: 'editorjs',
+            tools: {
+                header: { class: Header, inlineToolbar: true },
 
-// 封装更新指定ID块的函数
-function updateBlockById(id, newData) {
-    const index = getBlockIndexById(id);
-    if (index !== -1) {
-        editor.blocks.update(index, newData);
-    } else {
-        console.log(`未找到ID为${id}的块`);
-    }
-}
+                embed: Embed,
+                input: Input,
+                checklist: {
+                    class: Checklist,
+                    inlineToolbar: true,
+                },
+                image: SimpleImage,
+                button: {
+                    class: Button,
+                    data: {}
+                },
+                list: {
+                    class: EditorjsList,
+                    inlineToolbar: true,
+                    config: {
+                        defaultStyle: 'unordered'
+                    },
+                },
+                code: CodeTool,
+                mark: {
+                    class: MarkerTool,
+                    shortcut: 'CMD+M',
+                },
+                inlineCode: {
+                    class: InlineCode,
+                    shortcut: 'CMD+SHIFT+M',
+                },
+                myTune: MyBlockTune,
+
+            },
+            tunes: ['myTune'],
+            data: data
+
+
+        })
+    }).catch((error) => {
+        console.log('读取文件失败：', error);
+    });
+})
 
 document.addEventListener('DOMContentLoaded', async () => {
 
