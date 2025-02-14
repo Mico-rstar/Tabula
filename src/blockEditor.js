@@ -17,7 +17,45 @@ import EditorjsList from './editor/block/editorjs-list.mjs';
 const idIndexMap = {};
 
 var editor = new EditorJS({
-});
+
+    holder: 'editorjs',
+    tools: {
+        header: { class: Header, inlineToolbar: true },
+
+        embed: Embed,
+        input: Input,
+        checklist: {
+            class: Checklist,
+            inlineToolbar: true,
+        },
+        image: SimpleImage,
+        button: {
+            class: Button,
+            data: {}
+        },
+        list: {
+            class: EditorjsList,
+            inlineToolbar: true,
+            config: {
+                defaultStyle: 'unordered'
+            },
+        },
+        code: CodeTool,
+        mark: {
+            class: MarkerTool,
+            shortcut: 'CMD+M',
+        },
+        inlineCode: {
+            class: InlineCode,
+            shortcut: 'CMD+SHIFT+M',
+        },
+        myTune: MyBlockTune,
+
+    },
+    tunes: ['myTune']
+
+
+})
 
 
 console.log('editor', editor)
