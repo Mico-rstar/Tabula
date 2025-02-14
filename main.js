@@ -1,7 +1,7 @@
 // main.js
 
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, Menu, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
 import path from 'node:path'
 import url from 'url'
 import { writeFile, readFile } from './src/utils/FileOP.mjs'
@@ -59,6 +59,24 @@ const createWindow = () => {
                         mainWindow.webContents.send('recover-file', __dataDir);
                     }
                 },
+                {
+                    label: 'Open',
+                    accelerator: 'CmdOrCtrl+O',
+                    click: () => {
+                        dialog.showOpenDialog({
+                            properties: ['openFile']
+                        }).then(result => {
+                            if (!result.canceled) {
+                                console.log('Selected file: ', result.filePaths);
+                                console.log('Selected file: ', result.filePaths[0]);
+                                mainWindow.webContents.send('open-file', result.filePaths[0]);
+                            }
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                    }
+                },
+
             ]
         }
     ]

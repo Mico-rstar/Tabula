@@ -17,7 +17,8 @@ import EditorjsList from './editor/block/editorjs-list.mjs';
 
 const idIndexMap = {};
 
-var editor = {};
+var editor = new EditorJS({
+});
 
 
 console.log('editor', editor)
@@ -47,6 +48,7 @@ window.DRAPI.recoverFile((dataDir) => {
         const data = JSON.parse(outputData);
         console.log(data);
 
+        editor.destroy()
         // 在这里处理读取到的数据
         editor = new EditorJS({
 
@@ -94,6 +96,60 @@ window.DRAPI.recoverFile((dataDir) => {
     });
 }
 )
+
+window.DRAPI.openFile((dataDir) => {
+    window.DRAPI.read(dataDir).then((outputData) => {
+        console.log('读取文件成功：', outputData);
+        const data = JSON.parse(outputData);
+        console.log(data);
+
+        editor.destroy()
+        // 在这里处理读取到的数据
+        editor = new EditorJS({
+
+            holder: 'editorjs',
+            tools: {
+                header: { class: Header, inlineToolbar: true },
+
+                embed: Embed,
+                input: Input,
+                checklist: {
+                    class: Checklist,
+                    inlineToolbar: true,
+                },
+                image: SimpleImage,
+                button: {
+                    class: Button,
+                    data: {}
+                },
+                list: {
+                    class: EditorjsList,
+                    inlineToolbar: true,
+                    config: {
+                        defaultStyle: 'unordered'
+                    },
+                },
+                code: CodeTool,
+                mark: {
+                    class: MarkerTool,
+                    shortcut: 'CMD+M',
+                },
+                inlineCode: {
+                    class: InlineCode,
+                    shortcut: 'CMD+SHIFT+M',
+                },
+                myTune: MyBlockTune,
+
+            },
+            tunes: ['myTune'],
+            data: data
+
+
+        })
+    }).catch((error) => {
+        console.log('读取文件失败：', error);
+    });
+})
 
 document.addEventListener('DOMContentLoaded', async () => {
 
