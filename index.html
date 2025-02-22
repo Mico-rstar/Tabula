@@ -4,57 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
+    <link rel="stylesheet" href="index.css">
 
-        #sidebar {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            /* Initially hidden */
-            width: 300px;
-            height: 100%;
-            background-color: #2c3e50;
-            color: white;
-            transition: right 0.3s ease-in-out;
-            padding: 20px;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        #content {
-            margin-right: 0;
-            transition: margin-right 0.3s ease-in-out;
-            padding: 20px;
-        }
-
-        .toggle-btn {
-            position: absolute;
-            top: 20px;
-            left: -40px;
-            width: 40px;
-            height: 40px;
-            background-color: #34495e;
-            border-radius: 50% 0 0 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            user-select: none;
-        }
-    </style>
 </head>
 
 <body>
 
     <div id="sidebar">
         <div class="toggle-btn" onclick="toggleSidebar()">☰</div>
-        <h2>Developer Tools</h2>
-        <p>This is a sidebar similar to developer tools.</p>
+        <h2 id="blockName">块</h2>
+        <div id="options">
+            <span id="property">属性</span>
+            <span id="event">事件</span>
+        </div>
+        <div id="property-content" class="hidden"></div>
+
+        <div id="event-content" class="hidden">
+            <div id="add-workflow">
+                Add workflow
+            </div>
+
+        </div>
         <!-- Add more tools and options here -->
     </div>
 
@@ -81,6 +51,7 @@
                 content.style.marginRight = '0';
             }
         }
+        document.getElementById('property').style.backgroundColor = '#575757';
     </script>
 
 </body>

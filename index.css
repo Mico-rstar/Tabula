@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    /* Initially hidden */
+    width: 300px;
+    height: 100%;
+    background-color: #878788;
+    color: white;
+    transition: right 0.3s ease-in-out;
+    padding: 20px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#content {
+    margin-right: 0;
+    transition: margin-right 0.3s ease-in-out;
+    padding: 20px;
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 20px;
+    left: -40px;
+    width: 40px;
+    height: 40px;
+    background-color: #878788;
+    border-radius: 50% 0 0 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(246, 244, 244);
+    user-select: none;
+}
+
+#blockName {
+    margin-bottom: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+
+}
+
+#options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-top: 20px;
+    background-color: #6c6c6c;
+}
+
+#options span {
+
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+}
+
+.hidden {
+    display: none;
+}
+
+#add-workflow {
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    background-color: #6c6c6c;
+    transition: background-color 0.3s;
+    margin: 10px 0;
+}
+
+#add-workflow:hover {
+    background-color: #575757;
+}
