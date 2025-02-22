@@ -16,6 +16,8 @@ import EditorjsList from './editor/block/editorjs-list.mjs';
 
 const idIndexMap = {};
 
+
+
 var editor = new EditorJS({
 
     holder: 'editorjs',
@@ -31,7 +33,6 @@ var editor = new EditorJS({
         image: SimpleImage,
         button: {
             class: Button,
-            data: {}
         },
         list: {
             class: EditorjsList,
@@ -49,11 +50,14 @@ var editor = new EditorJS({
             class: InlineCode,
             shortcut: 'CMD+SHIFT+M',
         },
-        myTune: MyBlockTune,
+        myTune: {
+            class: MyBlockTune,
+            data: { doc: document },
+
+        },
 
     },
     tunes: ['myTune']
-
 
 })
 
@@ -266,3 +270,30 @@ async function getBlockIndexByID(id) {
 
 }
 
+
+//侧边栏
+const property = document.getElementById('property');
+const event = document.getElementById('event');
+property.addEventListener('click', () => {
+    property.style.backgroundColor = '#575757';
+    event.style.backgroundColor = '#6c6c6c';
+    showProperty();
+})
+event.addEventListener('click', () => {
+    property.style.backgroundColor = '#6c6c6c';
+    event.style.backgroundColor = '#575757';
+    showEvent();
+})
+
+function showProperty() {
+    const propertyContent = document.getElementById('property-content');
+    const eventContent = document.getElementById('event-content');
+    propertyContent.style.display = 'block';
+    eventContent.style.display = 'none';
+}
+function showEvent() {
+    const propertyContent = document.getElementById('property-content');
+    const eventContent = document.getElementById('event-content');
+    propertyContent.style.display = 'none';
+    eventContent.style.display = 'block';
+}

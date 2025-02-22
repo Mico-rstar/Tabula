@@ -1,6 +1,7 @@
 class MyBlockTune {
-    constructor({ api }) {
+    constructor({ data: d, api }) {
         this.api = api;
+        this.data = d;
     }
 
     static get isTune() {
@@ -20,14 +21,13 @@ class MyBlockTune {
         return {
             icon: '<svg>...</svg>',
             title: 'Workflows',
-            children: {
-                items: [
-                    {
-                        icon: '<svg>...</svg>',
-                        title: 'test',
-                        onActivate: () => { }
-                    }
-                ]
+            onActivate: () => {
+                console.log('clicked');
+                const sidebar = document.getElementById('sidebar');
+                const content = document.getElementById('content');
+                //弹出侧边栏
+                sidebar.style.right = '0';
+                content.style.marginRight = '300px';
             }
         }
     }
