@@ -50,9 +50,9 @@ body {
 }
 
 #options {
+
     display: flex;
     flex-direction: row;
-    gap: 10px;
     margin-top: 20px;
     background-color: #6c6c6c;
 }
@@ -75,7 +75,6 @@ body {
 #add-workflow {
     padding: 10px;
     border-radius: 5px;
-    width: 100%;
     text-align: center;
     cursor: pointer;
     background-color: #6c6c6c;
@@ -85,4 +84,94 @@ body {
 
 #add-workflow:hover {
     background-color: #575757;
+}
+
+
+
+.container {
+    background-color: #575757;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group select,
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.buttons button.primary {
+    background-color: #326aaf;
+    color: white;
+}
+
+.buttons button.cancel {
+    background-color: #656161;
+    color: white;
+}
+
+
+
+
+
+.menu {
+    width: 300px;
+    overflow-y: auto;
+    max-height: 400px;
+    background-color: rgb(77, 73, 73);
+    border: 1px solid #857c7c;
+    border-radius: 8px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.menu-item>span {
+    margin-left: 5px;
+}
+
+.sub-menu {
+    display: none;
+    margin-left: 5px;
+}
+
+/* 箭头默认样式 */
+.menu-item>.toggle-icon {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+/* 旋转后的样式 */
+.menu-item>.toggle-icon.rotated {
+    transform: rotate(90deg);
 }
