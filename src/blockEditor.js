@@ -14,6 +14,7 @@ import CodeTool from './editor/block/code.mjs';
 import EditorjsList from './editor/block/editorjs-list.mjs';
 
 
+
 const idIndexMap = {};
 
 
@@ -274,6 +275,27 @@ async function getBlockIndexByID(id) {
 //侧边栏
 const property = document.getElementById('property');
 const event = document.getElementById('event');
+const addWorkflowBtn = document.getElementById('add-workflow');
+addWorkflowBtn.addEventListener('click', () => {
+    const workflowList = document.getElementById('workflow-list');
+    workflowList.style.display = 'block';
+    document.querySelector('.primary').addEventListener('click', () => {
+        const eventType = document.getElementById('eventType').value;
+        const action = document.getElementById('action').value;
+
+        //todo
+        workflowList.style.display = 'none';
+    });
+
+    document.querySelector('.cancel').addEventListener('click', () => {
+        document.getElementById('eventType').selectedIndex = 0;
+        document.getElementById('action').selectedIndex = 0;
+        workflowList.style.display = 'none';
+    });
+})
+
+
+
 property.addEventListener('click', () => {
     property.style.backgroundColor = '#575757';
     event.style.backgroundColor = '#6c6c6c';
@@ -297,3 +319,134 @@ function showEvent() {
     propertyContent.style.display = 'none';
     eventContent.style.display = 'block';
 }
+
+
+
+
+
+
+function createMenu(data) {
+    const menu = document.createElement('div');
+    menu.className = 'menu';
+
+    function createMenuItem(item, level = 0) {
+        const menuItem = document.createElement('div');
+        menuItem.className = 'menu-item';
+
+        const itemName = document.createElement('span');
+        itemName.textContent = item.name;
+        menuItem.appendChild(itemName);
+
+        if (item.children && item.children.length > 0) {
+            const toggleIcon = document.createElement('span');
+            toggleIcon.className = 'toggle-icon'; // 添加类名
+            toggleIcon.textContent = '>';
+            menuItem.appendChild(toggleIcon);
+
+            const subMenu = document.createElement('div');
+            subMenu.className = 'sub-menu';
+
+            item.children.forEach(child => {
+                subMenu.appendChild(createMenuItem(child, level + 1));
+            });
+
+            menuItem.appendChild(subMenu);
+
+            toggleIcon.addEventListener('click', () => {
+                subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+                console.log('Clicked on menu item:', item.name);
+                // 切换旋转状态
+                toggleIcon.classList.toggle('rotated');
+            });
+        } else {
+            menuItem.addEventListener('click', () => {
+                //window.location.href = item.url;
+
+                document.getElementById('args-input').value = "{{" + item.url + "}}";
+                document.getElementById('menu').innerHTML = '';
+
+            });
+        }
+
+        return menuItem;
+    }
+
+    data.children.forEach(child => {
+        menu.appendChild(createMenuItem(child));
+    });
+
+    return menu;
+}
+
+
+
+//buildDropdown(menuData);
+//监听args-input焦点事件
+const argsInput = document.getElementById('args-input');
+argsInput.addEventListener('focus', () => {
+    editor.save().then((outputData) => {
+        console.log('args-input focus', outputData);
+        //将outputData转换为menuData的形式
+        console.log(transOutputToMenuData(outputData));
+
+        // 清空menu容器中的内容
+        const menuContainer = document.getElementById('menu');
+        menuContainer.innerHTML = '';
+
+        menuContainer.appendChild(createMenu(transOutputToMenuData(outputData)));
+    })
+});
+
+
+
+function transOutputToMenuData(outputData) {
+    var menuData = { name: 'Blocks', children: [] };
+    for (let i = 0; i < outputData.blocks.length; i++) {
+        menuData.children.push({
+            name: "block" + i,
+            children: transDataToMenuData(outputData.blocks[i].data, ['block', i.toString(), 'data'], 'data')
+        });
+    }
+
+    return menuData;
+}
+function transDataToMenuData(data, path, prekey) {
+    // 截止条件：data不是数组也不是对象，或者data为空
+    //console.log(typeof data);
+    //console.log(data);
+    var menuData = [];
+    if (typeof data !== 'object' || data === null) {
+
+        return [{ "name": prekey, "url": path.join('.') }];
+    }
+
+    //console.log(typeof data, data);
+    // 遍历data对象
+    if (!Array.isArray(data)) {
+        for (let key in data) {
+            const value = data[key];
+
+            const mid = transDataToMenuData(value, path.concat(key), key);
+            if (mid.length == 1)
+                menuData.push(mid[0]);
+            else menuData.push({ "name": key, "children": mid });
+
+        }
+    } else {
+        //console.log('数组', data);
+        data.forEach((item, index) => {
+            const middata = transDataToMenuData(item, path.concat(index), prekey + index.toString());
+            /*
+            middata.forEach(mid => {
+                menuData.push(mid);
+            })
+                */
+            menuData.push({ "name": index, "children": middata });
+        });
+    }
+
+    return menuData;
+}
+
+
+
