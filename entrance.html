@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="entrance.css">
+
+</head>
+
+<body>
+    <div id="content">
+        <div id="view-switcher">
+            <div id="switcher">
+                <span class="view-btn" id="editor-option" data-view="editor">块编辑</span>
+                <span class="view-btn" id="flow-option" data-view="drawflow">工作流</span>
+            </div>
+        </div>
+        <!-- <div id="view-container"></div> -->
+        <div id="view-container">
+            <iframe class="view-display" id="editor-view" src="./src/views/editor.html" frameborder="0"></iframe>
+            <iframe class="view-display" id="drawflow-view" src="./src/views/drawflow.html" frameborder="0"></iframe>
+        </div>
+        <!-- <script type="module" src="entrance.js"></script> -->
+    </div>
+    <script src="entrance.js"></script>
+</body>
+
+
+</html>
