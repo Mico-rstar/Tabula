@@ -1,7 +1,7 @@
 // preload.js
 console.log('Exposing blocksuite to window');
 import { contextBridge, ipcRenderer } from "electron"
-
+import Drawflow from "drawflow";
 
 
 
@@ -18,8 +18,9 @@ contextBridge.exposeInMainWorld('DRAPI', {
     recoverFile: (callback) => ipcRenderer.on('recover-file', (event, value) => callback(value)),
     openFile: (callback) => ipcRenderer.on('open-file', (event, value) => callback(value)),
     write: (filePath, data) => ipcRenderer.invoke('writeFile', filePath, data),
-    read: (filePath) => ipcRenderer.invoke('readFile', filePath)
+    read: (filePath) => ipcRenderer.invoke('readFile', filePath),
 
+    Drawflow: Drawflow
 });
 
 
