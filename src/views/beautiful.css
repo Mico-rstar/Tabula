@@ -386,3 +386,154 @@ header a {
         width: 80%;
     }
 }
+
+
+
+
+
+
+
+
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    /* Initially hidden */
+    width: 300px;
+    height: 100%;
+    background-color: #878788;
+    color: white;
+    transition: right 0.3s ease-in-out;
+    padding: 20px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#sidebar-toggle-btn {
+    cursor: pointer;
+}
+
+
+#flowName {
+    margin-bottom: 20px;
+    font-size: 25px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+
+}
+
+.io-class {
+    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+}
+
+.args-input-item {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#args-output-container {
+    max-width: 600px;
+    margin: auto;
+}
+
+.args-output-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.args-output-item span {
+    margin-right: 10px;
+}
+
+.args-output-type {
+    background-color: #d0d0d0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.args-output-arrow {
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+
+.col-half {
+    height: 50%;
+    width: 100%;
+    border: #0e5ba3;
+    border-width: 1px;
+    border-style: solid;
+}
+
+#create-workflow {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #6c6c6c;
+    transition: background-color 0.3s;
+    margin: 10px 0;
+}
+
+#flow-list-header {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+#flow-list-header span {
+    padding: 5px;
+
+}
+
+#flow-add-btn {
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+#flow-add-btn:hover {
+    background-color: #cfcfcf;
+}
+
+#flow-expand-btn {
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+#flow-expand-btn:hover {
+    background-color: #cfcfcf;
+}
+
+
+
+.flow-list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    margin-left: 30px;
+}
+
+.flow-list-item:hover {
+    background-color: #cfcfcf;
+}
+
+.flow-list-item-delete {
+    cursor: pointer;
+}
+
+.flow-list-item-delete:hover {
+    background-color: #adacac;
+}

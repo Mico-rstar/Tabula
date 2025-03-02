@@ -1,13 +1,103 @@
 
-
 var id = document.getElementById("drawflow");
 const editor = new Drawflow(id);
 editor.reroute = true;
-const dataToImport = { "drawflow": { "Home": { "data": { "1": { "id": 1, "name": "welcome", "data": {}, "class": "welcome", "html": "\n    <div>\n      <div class=\"title-box\">👏 Welcome!!</div>\n      <div class=\"box\">\n        <p>Simple flow library <b>demo</b>\n        <a href=\"https://github.com/jerosoler/Drawflow\" target=\"_blank\">Drawflow</a> by <b>Jero Soler</b></p><br>\n\n        <p>Multiple input / outputs<br>\n           Data sync nodes<br>\n           Import / export<br>\n           Modules support<br>\n           Simple use<br>\n           Type: Fixed or Edit<br>\n           Events: view console<br>\n           Pure Javascript<br>\n        </p>\n        <br>\n        <p><b><u>Shortkeys:</u></b></p>\n        <p>🎹 <b>Delete</b> for remove selected<br>\n        💠 Mouse Left Click == Move<br>\n        ❌ Mouse Right == Delete Option<br>\n        🔍 Ctrl + Wheel == Zoom<br>\n        📱 Mobile support<br>\n        ...</p>\n      </div>\n    </div>\n    ", "typenode": false, "inputs": {}, "outputs": {}, "pos_x": 50, "pos_y": 50 }, "2": { "id": 2, "name": "slack", "data": {}, "class": "slack", "html": "\n          <div>\n            <div class=\"title-box\"><i class=\"fab fa-slack\"></i> Slack chat message</div>\n          </div>\n          ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "7", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1028, "pos_y": 87 }, "3": { "id": 3, "name": "telegram", "data": { "channel": "channel_2" }, "class": "telegram", "html": "\n          <div>\n            <div class=\"title-box\"><i class=\"fab fa-telegram-plane\"></i> Telegram bot</div>\n            <div class=\"box\">\n              <p>Send to telegram</p>\n              <p>select channel</p>\n              <select df-channel>\n                <option value=\"channel_1\">Channel 1</option>\n                <option value=\"channel_2\">Channel 2</option>\n                <option value=\"channel_3\">Channel 3</option>\n                <option value=\"channel_4\">Channel 4</option>\n              </select>\n            </div>\n          </div>\n          ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "7", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1032, "pos_y": 184 }, "4": { "id": 4, "name": "email", "data": {}, "class": "email", "html": "\n            <div>\n              <div class=\"title-box\"><i class=\"fas fa-at\"></i> Send Email </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "5", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1033, "pos_y": 439 }, "5": { "id": 5, "name": "template", "data": { "template": "Write your template" }, "class": "template", "html": "\n            <div>\n              <div class=\"title-box\"><i class=\"fas fa-code\"></i> Template</div>\n              <div class=\"box\">\n                Ger Vars\n                <textarea df-template></textarea>\n                Output template with vars\n              </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "6", "input": "output_1" }] } }, "outputs": { "output_1": { "connections": [{ "node": "4", "output": "input_1" }, { "node": "11", "output": "input_1" }] } }, "pos_x": 607, "pos_y": 304 }, "6": { "id": 6, "name": "github", "data": { "name": "https://github.com/jerosoler/Drawflow" }, "class": "github", "html": "\n          <div>\n            <div class=\"title-box\"><i class=\"fab fa-github \"></i> Github Stars</div>\n            <div class=\"box\">\n              <p>Enter repository url</p>\n            <input type=\"text\" df-name>\n            </div>\n          </div>\n          ", "typenode": false, "inputs": {}, "outputs": { "output_1": { "connections": [{ "node": "5", "output": "input_1" }] } }, "pos_x": 341, "pos_y": 191 }, "7": { "id": 7, "name": "facebook", "data": {}, "class": "facebook", "html": "\n        <div>\n          <div class=\"title-box\"><i class=\"fab fa-facebook\"></i> Facebook Message</div>\n        </div>\n        ", "typenode": false, "inputs": {}, "outputs": { "output_1": { "connections": [{ "node": "2", "output": "input_1" }, { "node": "3", "output": "input_1" }, { "node": "11", "output": "input_1" }] } }, "pos_x": 347, "pos_y": 87 }, "11": { "id": 11, "name": "log", "data": {}, "class": "log", "html": "\n            <div>\n              <div class=\"title-box\"><i class=\"fas fa-file-signature\"></i> Save log file </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "5", "input": "output_1" }, { "node": "7", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1031, "pos_y": 363 } } }, "Other": { "data": { "8": { "id": 8, "name": "personalized", "data": {}, "class": "personalized", "html": "\n            <div>\n              Personalized\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "12", "input": "output_1" }, { "node": "12", "input": "output_2" }, { "node": "12", "input": "output_3" }, { "node": "12", "input": "output_4" }] } }, "outputs": { "output_1": { "connections": [{ "node": "9", "output": "input_1" }] } }, "pos_x": 764, "pos_y": 227 }, "9": { "id": 9, "name": "dbclick", "data": { "name": "Hello World!!" }, "class": "dbclick", "html": "\n            <div>\n            <div class=\"title-box\"><i class=\"fas fa-mouse\"></i> Db Click</div>\n              <div class=\"box dbclickbox\" ondblclick=\"showpopup(event)\">\n                Db Click here\n                <div class=\"modal\" style=\"display:none\">\n                  <div class=\"modal-content\">\n                    <span class=\"close\" onclick=\"closemodal(event)\">&times;</span>\n                    Change your variable {name} !\n                    <input type=\"text\" df-name>\n                  </div>\n\n                </div>\n              </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "8", "input": "output_1" }] } }, "outputs": { "output_1": { "connections": [{ "node": "12", "output": "input_2" }] } }, "pos_x": 209, "pos_y": 38 }, "12": { "id": 12, "name": "multiple", "data": {}, "class": "multiple", "html": "\n            <div>\n              <div class=\"box\">\n                Multiple!\n              </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [] }, "input_2": { "connections": [{ "node": "9", "input": "output_1" }] }, "input_3": { "connections": [] } }, "outputs": { "output_1": { "connections": [{ "node": "8", "output": "input_1" }] }, "output_2": { "connections": [{ "node": "8", "output": "input_1" }] }, "output_3": { "connections": [{ "node": "8", "output": "input_1" }] }, "output_4": { "connections": [{ "node": "8", "output": "input_1" }] } }, "pos_x": 179, "pos_y": 272 } } } } }
+const dataToImport = {
+  "drawflow": {
+    "Home": {
+      "data": {
+        "13": {
+          "id": 13,
+          "name": "start",
+          "data": {},
+          "class": "start",
+          "html": "\n        <div>\n          <div class=\"title-box\"><i></i>开始</div>\n        </div>\n        ",
+          "typenode": false,
+          "inputs": {},
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "15",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 18,
+          "pos_y": 92
+        },
+        "14": {
+          "id": 14,
+          "name": "end",
+          "data": {},
+          "class": "end",
+          "html": "\n          <div>\n            <div class=\"title-box\"><i></i> end</div>\n          </div>\n          ",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "15",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {},
+          "pos_x": 476,
+          "pos_y": 472
+        },
+        "15": {
+          "id": 15,
+          "name": "test",
+          "data": {
+            "db": {
+              "dbname": "",
+              "key": ""
+            }
+          },
+          "class": "test",
+          "html": "\n          <div>\n            <div class=\"title-box\"><i></i> test </div>\n            <div class=\"box\">\n              <p>test</p>\n              <input type=\"text\" df-db-dbname placeholder=\"DB name\"><br><br>\n              <input type=\"text\" df-db-key placeholder=\"DB key\">\n              <p>Output Log</p>\n            </div>\n          </div>\n          ",
+          "typenode": false,
+          "inputs": {
+            "input_1": {
+              "connections": [
+                {
+                  "node": "13",
+                  "input": "output_1"
+                }
+              ]
+            }
+          },
+          "outputs": {
+            "output_1": {
+              "connections": [
+                {
+                  "node": "14",
+                  "output": "input_1"
+                }
+              ]
+            }
+          },
+          "pos_x": 254,
+          "pos_y": 170
+        }
+      }
+    }
+  }
+}
+
 editor.start();
 editor.import(dataToImport);
 
+editor.clearModuleSelected()
 
+
+//export data
+document.getElementsByClassName("btn-export")[0].addEventListener("click", function () {
+  console.log("export", editor.export(), null, 4);
+});
 
 /* DRAG EVENT */
 
@@ -62,140 +152,36 @@ function addNodeToDrawFlow(name, pos_x, pos_y) {
 
 
   switch (name) {
-    case 'facebook':
-      var facebook = `
+    case 'start':
+      var start = `
         <div>
-          <div class="title-box"><i class="fab fa-facebook"></i> Facebook Message</div>
+          <div class="title-box" ondblclick="showSidebar(event)"><i></i>开始</div>
         </div>
-        `;
-      editor.addNode('facebook', 0, 1, pos_x, pos_y, 'facebook', {}, facebook);
+      `;
+      editor.addNode('start', 0, 1, pos_x, pos_y, 'start', { "input": {}, "output": {} }, start);
       break;
-    case 'slack':
-      var slackchat = `
+    case 'end':
+      var end = `
           <div>
-            <div class="title-box"><i class="fab fa-slack"></i> Slack chat message</div>
+            <div class="title-box" ondblclick="showSidebar(event)"><i></i> end</div>
           </div>
           `
-      editor.addNode('slack', 1, 0, pos_x, pos_y, 'slack', {}, slackchat);
+      editor.addNode('end', 1, 0, pos_x, pos_y, 'end', {}, end);
       break;
-    case 'github':
-      var githubtemplate = `
+
+    case 'test':
+      var test = `
           <div>
-            <div class="title-box"><i class="fab fa-github "></i> Github Stars</div>
+            <div class="title-box" ondblclick="showSidebar(event)"><i></i> test </div>
             <div class="box">
-              <p>Enter repository url</p>
-            <input type="text" df-name>
-            </div>
-          </div>
-          `;
-      editor.addNode('github', 0, 1, pos_x, pos_y, 'github', { "name": '' }, githubtemplate);
-      break;
-    case 'telegram':
-      var telegrambot = `
-          <div>
-            <div class="title-box"><i class="fab fa-telegram-plane"></i> Telegram bot</div>
-            <div class="box">
-              <p>Send to telegram</p>
-              <p>select channel</p>
-              <select df-channel>
-                <option value="channel_1">Channel 1</option>
-                <option value="channel_2">Channel 2</option>
-                <option value="channel_3">Channel 3</option>
-                <option value="channel_4">Channel 4</option>
-              </select>
-            </div>
-          </div>
-          `;
-      editor.addNode('telegram', 1, 0, pos_x, pos_y, 'telegram', { "channel": 'channel_3' }, telegrambot);
-      break;
-    case 'aws':
-      var aws = `
-          <div>
-            <div class="title-box"><i class="fab fa-aws"></i> Aws Save </div>
-            <div class="box">
-              <p>Save in aws</p>
+              <p>test</p>
               <input type="text" df-db-dbname placeholder="DB name"><br><br>
               <input type="text" df-db-key placeholder="DB key">
               <p>Output Log</p>
             </div>
           </div>
           `;
-      editor.addNode('aws', 1, 1, pos_x, pos_y, 'aws', { "db": { "dbname": '', "key": '' } }, aws);
-      break;
-    case 'log':
-      var log = `
-            <div>
-              <div class="title-box"><i class="fas fa-file-signature"></i> Save log file </div>
-            </div>
-            `;
-      editor.addNode('log', 1, 0, pos_x, pos_y, 'log', {}, log);
-      break;
-    case 'google':
-      var google = `
-            <div>
-              <div class="title-box"><i class="fab fa-google-drive"></i> Google Drive save </div>
-            </div>
-            `;
-      editor.addNode('google', 1, 0, pos_x, pos_y, 'google', {}, google);
-      break;
-    case 'email':
-      var email = `
-            <div>
-              <div class="title-box"><i class="fas fa-at"></i> Send Email </div>
-            </div>
-            `;
-      editor.addNode('email', 1, 0, pos_x, pos_y, 'email', {}, email);
-      break;
-
-    case 'template':
-      var template = `
-            <div>
-              <div class="title-box"><i class="fas fa-code"></i> Template</div>
-              <div class="box">
-                Ger Vars
-                <textarea df-template></textarea>
-                Output template with vars
-              </div>
-            </div>
-            `;
-      editor.addNode('template', 1, 1, pos_x, pos_y, 'template', { "template": 'Write your template' }, template);
-      break;
-    case 'multiple':
-      var multiple = `
-            <div>
-              <div class="box">
-                Multiple!
-              </div>
-            </div>
-            `;
-      editor.addNode('multiple', 3, 4, pos_x, pos_y, 'multiple', {}, multiple);
-      break;
-    case 'personalized':
-      var personalized = `
-            <div>
-              Personalized
-            </div>
-            `;
-      editor.addNode('personalized', 1, 1, pos_x, pos_y, 'personalized', {}, personalized);
-      break;
-    case 'dbclick':
-      var dbclick = `
-            <div>
-            <div class="title-box"><i class="fas fa-mouse"></i> Db Click</div>
-              <div class="box dbclickbox" ondblclick="showpopup(event)">
-                Db Click here
-                <div class="modal" style="display:none">
-                  <div class="modal-content">
-                    <span class="close" onclick="closemodal(event)">&times;</span>
-                    Change your variable {name} !
-                    <input type="text" df-name>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-            `;
-      editor.addNode('dbclick', 1, 1, pos_x, pos_y, 'dbclick', { name: '' }, dbclick);
+      editor.addNode('test', 1, 1, pos_x, pos_y, 'test', { "db": { "dbname": '', "key": '' } }, test);
       break;
 
     default:
@@ -254,61 +240,109 @@ function changeMode(option) {
 
 
 
-/*
+//加载工作流输出
+function createDataItem(key, value) {
+  const item = document.createElement('div');
+  item.className = 'args-output-item';
 
-// Events!
-editor.on('nodeCreated', function (id) {
-    console.log("Node created " + id);
-})
+  const keyElement = document.createElement('span');
+  keyElement.className = 'args-output-key';
+  keyElement.textContent = key;
 
-editor.on('nodeRemoved', function (id) {
-    console.log("Node removed " + id);
-})
+  const valueElement = document.createElement('span');
+  valueElement.className = 'args-output-type';
+  valueElement.textContent = value;
 
-editor.on('nodeSelected', function (id) {
-    console.log("Node selected " + id);
-})
+  item.appendChild(keyElement);
+  item.appendChild(valueElement);
 
-editor.on('moduleCreated', function (name) {
-    console.log("Module Created " + name);
-})
+  return item;
+}
 
-editor.on('moduleChanged', function (name) {
-    console.log("Module Changed " + name);
-})
 
-editor.on('connectionCreated', function (connection) {
-    console.log('Connection created');
-    console.log(connection);
-})
+//递归地创建输出对象信息
+function createObjectItem(key, obj) {
+  const item = document.createElement('div');
+  item.className = 'args-output-item';
 
-editor.on('connectionRemoved', function (connection) {
-    console.log('Connection removed');
-    console.log(connection);
-})
+  const details = document.createElement('div');
+  details.className = 'args-output-item';
+  details.style.display = 'none';
+  for (const [key, value] of Object.entries(obj)) {
+    if (typeof value === 'object' && value !== null) {
+      details.appendChild(createObjectItem(key, value));
+    } else {
+      details.appendChild(createDataItem(key, value));
+    }
+  }
 
-editor.on('mouseMove', function (position) {
-    console.log('Position mouse x:' + position.x + ' y:' + position.y);
-})
+  const arrow = document.createElement('span');
+  arrow.className = 'args-output-arrow';
+  arrow.textContent = '▶';
+  arrow.addEventListener('click', () => {
+    if (arrow.textContent === '▶') {
+      arrow.textContent = '▼';
+      details.style.display = 'block';
+    } else {
+      arrow.textContent = '▶';
+      details.style.display = 'none';
+    }
+  });
 
-editor.on('nodeMoved', function (id) {
-    console.log("Node moved " + id);
-})
+  const keyElement = document.createElement('span');
+  keyElement.className = 'args-output-key';
+  keyElement.textContent = key;
 
-editor.on('zoom', function (zoom) {
-    console.log('Zoom level ' + zoom);
-})
+  item.appendChild(arrow);
+  item.appendChild(keyElement);
+  item.appendChild(details);
 
-editor.on('translate', function (position) {
-    console.log('Translate x:' + position.x + ' y:' + position.y);
-})
+  return item;
+}
 
-editor.on('addReroute', function (id) {
-    console.log("Reroute added " + id);
-})
 
-editor.on('removeReroute', function (id) {
-    console.log("Reroute removed " + id);
-})
 
-*/
+
+document.addEventListener('DOMContentLoaded', function () {
+  const data = {
+    message: "String",
+    pdf_content: "String",
+    code: "Integer",
+    data: {
+      content: "String",
+      title: {
+        content: "String",
+        check: "Boolean"
+      }
+    },
+    err_msg: "String",
+    error_code: "String",
+    error_msg: "String"
+  };
+  const container = document.getElementById('args-output-container');
+
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === 'object' && value !== null) {
+      container.appendChild(createObjectItem(key, value));
+    } else {
+      container.appendChild(createDataItem(key, value));
+    }
+  }
+
+});
+
+
+
+
+
+function showSidebar(event) {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.style.right = '0';
+  console.log('showSidebar', event.target.offsetParent.id);
+}
+
+function hideSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.style.right = '-400px';
+  console.log('hideSidebar');
+}
