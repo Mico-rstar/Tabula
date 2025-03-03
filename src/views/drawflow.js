@@ -2,91 +2,15 @@
 var id = document.getElementById("drawflow");
 const editor = new Drawflow(id);
 editor.reroute = true;
+
 const dataToImport = {
   "drawflow": {
     "Home": {
-      "data": {
-        "13": {
-          "id": 13,
-          "name": "start",
-          "data": {},
-          "class": "start",
-          "html": "\n        <div>\n          <div class=\"title-box\"><i></i>开始</div>\n        </div>\n        ",
-          "typenode": false,
-          "inputs": {},
-          "outputs": {
-            "output_1": {
-              "connections": [
-                {
-                  "node": "15",
-                  "output": "input_1"
-                }
-              ]
-            }
-          },
-          "pos_x": 18,
-          "pos_y": 92
-        },
-        "14": {
-          "id": 14,
-          "name": "end",
-          "data": {},
-          "class": "end",
-          "html": "\n          <div>\n            <div class=\"title-box\"><i></i> end</div>\n          </div>\n          ",
-          "typenode": false,
-          "inputs": {
-            "input_1": {
-              "connections": [
-                {
-                  "node": "15",
-                  "input": "output_1"
-                }
-              ]
-            }
-          },
-          "outputs": {},
-          "pos_x": 476,
-          "pos_y": 472
-        },
-        "15": {
-          "id": 15,
-          "name": "test",
-          "data": {
-            "db": {
-              "dbname": "",
-              "key": ""
-            }
-          },
-          "class": "test",
-          "html": "\n          <div>\n            <div class=\"title-box\"><i></i> test </div>\n            <div class=\"box\">\n              <p>test</p>\n              <input type=\"text\" df-db-dbname placeholder=\"DB name\"><br><br>\n              <input type=\"text\" df-db-key placeholder=\"DB key\">\n              <p>Output Log</p>\n            </div>\n          </div>\n          ",
-          "typenode": false,
-          "inputs": {
-            "input_1": {
-              "connections": [
-                {
-                  "node": "13",
-                  "input": "output_1"
-                }
-              ]
-            }
-          },
-          "outputs": {
-            "output_1": {
-              "connections": [
-                {
-                  "node": "14",
-                  "output": "input_1"
-                }
-              ]
-            }
-          },
-          "pos_x": 254,
-          "pos_y": 170
-        }
-      }
+      "data": {}
     }
   }
 }
+
 
 editor.start();
 editor.import(dataToImport);
@@ -94,9 +18,41 @@ editor.import(dataToImport);
 editor.clearModuleSelected()
 
 
-//export data
-document.getElementsByClassName("btn-export")[0].addEventListener("click", function () {
-  console.log("export", editor.export(), null, 4);
+class Maintainer {
+  constructor() {
+    this.container = {};
+    this.id = 0;
+  }
+
+  add(key, value) {
+    this.container[key] = value;
+  }
+
+  remove(key) {
+    delete this.container[key];
+  }
+
+  get() {
+    return this.container;
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  setId(id) {
+    this.id = id;
+  }
+
+
+}
+const workflowContainer = new Maintainer();
+
+//save data
+document.getElementsByClassName("btn-save")[0].addEventListener("click", function () {
+  console.log(editor.export());
+  console.log(workflowContainer.get()[workflowContainer.getId()]);
+  workflowContainer.get()[workflowContainer.getId()].data = editor.export();
 });
 
 /* DRAG EVENT */
@@ -329,6 +285,77 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  //为flowlist添加动态事件
+  const flowExpandBtn = document.getElementById('flow-expand-btn');
+  flowExpandBtn.addEventListener('click', () => {
+    const flowList = document.getElementById('flow-list-content');
+    if (flowList.style.display === 'none') {
+      flowList.style.display = 'block';
+      flowExpandBtn.textContent = '▼';
+    } else {
+      flowList.style.display = 'none';
+      flowExpandBtn.textContent = '▶';
+    }
+  }
+  );
+
+  const flowAddBtn = document.getElementById('flow-add-btn');
+  flowAddBtn.addEventListener('click', () => {
+    const modal = document.getElementById('flow-modal');
+    modal.style.display = 'block';
+  });
+
+  //为modal添加动态事件
+  const closeBtn = document.querySelector('.close');
+  const cancelBtn = document.querySelector('.cancel-btn');
+  const form = document.getElementById('workflowForm');
+
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+
+  function closeModal() {
+    document.querySelector('.modal').style.display = 'none';
+  }
+
+  const flowNameInput = document.getElementById('workflowName');
+  //统计字数
+  flowNameInput.addEventListener('input', () => {
+    const length = flowNameInput.value.length;
+    document.getElementById('name-char-count').textContent = length + "/30";
+  });
+  const descriptionInput = document.getElementById('workflowDescription');
+  //统计字数
+  descriptionInput.addEventListener('input', () => {
+    const length = descriptionInput.value.length;
+    document.getElementById('description-char-count').textContent = length + "/600";
+  });
+
+
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    // 这里可以添加表单提交的逻辑
+    console.log('Form submitted');
+    if (flowNameInput.value !== '' && descriptionInput.value !== '') {
+      //用时间戳生成id
+      const id = Date.now();
+      workflowContainer.add(id, {
+        "name": flowNameInput.value, "description": descriptionInput.value, data: {
+          "drawflow": {
+            "Home": {
+              "data": {}
+            }
+          }
+        }
+      });
+      flowNameInput.value = '';
+      descriptionInput.value = '';
+      closeModal();
+      renderWorklist();
+    }
+  });
+
+
 });
 
 
@@ -338,11 +365,57 @@ document.addEventListener('DOMContentLoaded', function () {
 function showSidebar(event) {
   const sidebar = document.getElementById('sidebar');
   sidebar.style.right = '0';
-  console.log('showSidebar', event.target.offsetParent.id);
+  //console.log('showSidebar', event.target.offsetParent.id);
 }
 
 function hideSidebar() {
   const sidebar = document.getElementById('sidebar');
   sidebar.style.right = '-400px';
-  console.log('hideSidebar');
+  //console.log('hideSidebar');
 }
+
+
+window.onclick = function (event) {
+  hideSidebar();
+
+}
+
+
+function renderWorklist() {
+  const flowList = document.getElementById('flow-list-content');
+  flowList.innerHTML = '';
+  Object.entries(workflowContainer.get()).forEach(([key, value]) => {
+    var flowItem = document.createElement('div');
+    flowItem.className = 'flow-list-item';
+    flowItem.innerHTML = `
+    <span>`+ value.name + `</span>
+    <span class="flow-list-item-delete" id=`+ key + ` onclick="delFlowListItem(event)">–</span>`;
+
+    flowItem.addEventListener('click', () => {
+      document.querySelectorAll('.flow-list-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      console.log('click', key, value);
+      flowItem.classList.add('selected');
+      editor.clearModuleSelected();
+      editor.import(value.data);
+      console.log(editor);
+      workflowContainer.setId(key);
+    });
+
+    flowList.appendChild(flowItem);
+
+  });
+}
+
+function delFlowListItem(event) {
+  console.log("delItem", event);
+
+  //删除workflowContainer指定id的元素
+  workflowContainer.remove(event.target.id);
+  renderWorklist();
+}
+
+
+
+

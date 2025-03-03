@@ -27,21 +27,61 @@
     <header>
         <h2>Drawflow</h2>
     </header>
+
+    <!-- The Modal -->
+    <div id="flow-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>创建工作流</h2>
+            <svg t="1740907578172" class="workflow-icon" viewBox="0 0 1024 1024" version="1.1"
+                xmlns="http://www.w3.org/2000/svg" p-id="6967" width="200" height="200">
+                <path
+                    d="M521.3696 917.248c-6.144-31.744-9.3696-64.512-9.3696-98.048 0-232.192 154.5728-428.288 366.3872-491.008 14.6944-1.4848 29.7984-2.7648 45.312-3.84 23.552 53.76 32.6656 199.0144 27.3408 435.712l-159.0272 157.184h-270.6432z"
+                    fill="#20C997" p-id="6968"></path>
+                <path
+                    d="M354.7136 749.568a141.824 141.824 0 0 1 87.04 130.3552c0 78.336-64.512 141.824-144.0768 141.824S153.6 958.2592 153.6 879.9232c0-62.72 41.3696-115.968 98.7136-134.656V464.7936a155.5968 155.5968 0 1 1 311.1936 0v95.0784a54.3232 54.3232 0 0 0 108.6464 0V277.9136a143.5648 143.5648 0 0 1-95.232-134.5536c0-79.1552 65.2288-143.36 145.664-143.36 80.384 0 145.6128 64.2048 145.6128 143.36 0 61.1328-38.912 113.3568-93.696 133.9904v282.5216a156.7232 156.7232 0 1 1-313.3952 0V464.7936a53.1968 53.1968 0 0 0-106.3936 0v284.8256zM151.552 664.064a51.2 51.2 0 0 1-102.4 0V308.3264a256 256 0 0 1 256-256h155.5456a51.2 51.2 0 1 1 0 102.4H305.152a153.6 153.6 0 0 0-153.6 153.6v355.6352z m720.896-303.7696a51.2 51.2 0 0 1 102.4 0v355.328a256 256 0 0 1-256 256h-154.6752a51.2 51.2 0 1 1 0-102.4h154.624a153.6 153.6 0 0 0 153.6-153.6v-355.328z"
+                    fill="#2C6DD2" p-id="6969"></path>
+            </svg>
+
+            <form id="workflowForm">
+                <label for="workflowName">工作流名称 *</label>
+                <input type="text" id="workflowName" placeholder="请输入工作流名称" maxlength="30">
+                <span id="name-char-count" class="char-count">0/30</span>
+
+                <div>
+                    <label for="workflowDescription">工作流描述 *</label>
+                    <textarea id="workflowDescription" placeholder="请输入描述，让大模型理解什么情况下应该调用此工作流"
+                        maxlength="600"></textarea>
+                    <span id="description-char-count" class="char-count">0/600</span>
+                </div>
+
+
+                <div class="buttons">
+                    <button type="button" class="cancel-btn">取消</button>
+                    <button type="submit" class="confirm-btn">确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="wrapper">
         <div class="col">
             <div id="flow-list" class="col-half">
                 <div id="flow-list-header">
                     <span>
-                        <span id="flow-expand-btn">▶</span>
+                        <span id="flow-expand-btn">▼</span>
                         <span>workflows</span>
                     </span>
                     <span id="flow-add-btn">+</span>
                 </div>
                 <div id="flow-list-content">
-                    <div class="flow-list-item">
+                    <!--<div class="flow-list-item">
                         <span>flow1</span>
                         <span class="flow-list-item-delete">–</span>
                     </div>
+                    -->
+
+
                 </div>
             </div>
             <div id="node-list" class="col-half">
@@ -69,7 +109,7 @@
             </div>
             <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
 
-                <div class="btn-export">Export</div>
+                <div class="btn-save">Save</div>
                 <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
                 <div class="btn-lock">
                     <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
@@ -112,7 +152,7 @@
         <!-- Add more tools and options here -->
     </div>
 
-    <script src="drawflow.mjs"></script>
+    <script src="drawflow.js"></script>
 </body>
 
 </html>

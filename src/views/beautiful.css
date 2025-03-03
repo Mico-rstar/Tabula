@@ -97,7 +97,7 @@ header a {
     font-weight: bold;
 }
 
-.btn-export {
+.btn-save {
     float: right;
     position: absolute;
     top: 10px;
@@ -526,6 +526,10 @@ header a {
     margin-left: 30px;
 }
 
+.flow-list-item.selected {
+    background-color: #cfcfcf;
+}
+
 .flow-list-item:hover {
     background-color: #cfcfcf;
 }
@@ -536,4 +540,98 @@ header a {
 
 .flow-list-item-delete:hover {
     background-color: #adacac;
+}
+
+
+
+
+.modal {
+
+
+    display: none;
+    /* 默认显示 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.workflow-icon {
+    display: block;
+    margin: 10px auto;
+    width: 70px;
+}
+
+form {
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input[type=text],
+textarea {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.char-count {
+    float: right;
+    margin-top: -10px;
+    color: #999;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.cancel-btn,
+.confirm-btn {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: #f1f1f1;
+}
+
+.confirm-btn {
+    background-color: #dcdcdc;
 }
