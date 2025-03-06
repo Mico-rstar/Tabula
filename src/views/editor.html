@@ -9,65 +9,81 @@
 </head>
 
 <body>
+    <script src="../editor/block/CodeTool.js"></script>
+    <script src="../editor/block/column.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/editorjs-alert@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@calumk/editorjs-codeflask@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@calumk/editorjs-nested-checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@calumk/editorjs-paragraph-linebreakable"></script>
+
+
     <div class="view">
-        <div id="editor">
+        <div id="content">
 
-            <div id="sidebar">
-                <div class="toggle-btn" id="sidebar-toggle-btn">☰</div>
-                <h2 id="blockName">块</h2>
-                <div id="options">
-                    <span id="property">属性</span>
-                    <span id="event">事件</span>
-                </div>
-                <div id="property-content" class="hidden"></div>
-
-                <div id="event-content" class="hidden">
-
-                    <div id="add-workflow">
-                        Add workflow
-                    </div>
-                    <div id="workflow-list" class="container">
-                        <h2>事件配置</h2>
-                        <div class="form-group">
-                            <label for="eventType">事件类型</label>
-                            <select id="eventType" name="eventType">
-                                <option value="加载时">加载时</option>
-                                <!-- 可以根据需要添加更多选项 -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="action">执行工作流</label>
-                            <select id="action" name="action">
-                                <option value="请选择">请选择</option>
-                                <!-- 可以根据需要添加更多选项 -->
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="input">入参配置</label>
-                            <input type="text" id="args-input" name="input" placeholder="{{value}}表示变量"></input>
-                            <div id="menu"></div>
-
-                        </div>
-                        <div class="buttons">
-                            <button class="primary">确定</button>
-                            <button class="cancel">取消</button>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- Add more tools and options here -->
-            </div>
-
-            <div id="content">
-
-                <div id="editorjs"></div>
-
-
-            </div>
-
+            <div id="editorjs"></div>
+            <button id="getID">getID</button>
+            <button id="insert">insert</button>
+            <button id="clear">clear</button>
 
 
         </div>
+        <div id="editor">
+        </div>
+
+
+
+        <div id="sidebar">
+            <div class="toggle-btn" id="sidebar-toggle-btn">☰</div>
+            <h2 id="blockName">块</h2>
+            <div id="options">
+                <span id="property">属性</span>
+                <span id="event">事件</span>
+            </div>
+            <div id="property-content" class="hidden"></div>
+
+            <div id="event-content" class="hidden">
+
+                <div id="add-workflow">
+                    Add workflow
+                </div>
+                <div id="workflow-content" class="container"></div>
+                <div id="workflow-list" class="container">
+                    <h2>事件配置</h2>
+                    <div class="form-group">
+                        <label for="eventType">事件类型</label>
+                        <select id="eventType" name="eventType">
+                            <option value="加载时">加载时</option>
+                            <!-- 可以根据需要添加更多选项 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="action">执行工作流</label>
+                        <select id="action" name="action">
+                            <option value="请选择">请选择</option>
+                            <!-- 可以根据需要添加更多选项 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="input">入参配置</label>
+                        <input type="text" id="args-input" name="input" placeholder="{{value}}表示变量"></input>
+                        <div id="menu"></div>
+
+                    </div>
+                    <div class="buttons">
+                        <button class="primary">确定</button>
+                        <button class="cancel">取消</button>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Add more tools and options here -->
+        </div>
+
+
+
+
     </div>
     <script type="module" src="blockEditor.mjs"></script>
 </body>

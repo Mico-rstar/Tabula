@@ -77,6 +77,7 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
+  console.log("drag");
   if (ev.type === "touchstart") {
     mobile_item_selec = ev.target.closest(".drag-drawflow").getAttribute('data-node');
   } else {
@@ -85,6 +86,7 @@ function drag(ev) {
 }
 
 function drop(ev) {
+  console.log("drop");
   if (ev.type === "touchend") {
     var parentdrawflow = document.elementFromPoint(mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY).closest("#drawflow");
     if (parentdrawflow != null) {
@@ -137,11 +139,17 @@ function addNodeToDrawFlow(name, pos_x, pos_y) {
             </div>
           </div>
           `;
-      editor.addNode('test', 1, 1, pos_x, pos_y, 'test', { "db": { "dbname": '', "key": '' } }, test);
+      editor.addNode('test', 1, 3, pos_x, pos_y, 'test', { "db": { "dbname": '', "key": '' } }, test);
       break;
 
     default:
   }
+  document.querySelectorAll('.outputs').forEach(output => {
+    output.addEventListener('mousedown', () => {
+      console.log("click");
+    });
+  });
+
 }
 
 var transform = '';
@@ -365,6 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function showSidebar(event) {
   const sidebar = document.getElementById('sidebar');
   sidebar.style.right = '0';
+  console.log(event);
   //console.log('showSidebar', event.target.offsetParent.id);
 }
 
@@ -375,10 +384,10 @@ function hideSidebar() {
 }
 
 
-window.onclick = function (event) {
-  hideSidebar();
+// window.onclick = function (event) {
+//   hideSidebar();
 
-}
+// }
 
 
 function renderWorklist() {

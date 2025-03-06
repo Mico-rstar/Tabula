@@ -28,19 +28,62 @@ import MarkerTool from '../editor/inlineTool/inlineTool.mjs';
 import MyBlockTune from '../editor/blockTune/blockTune.mjs';
 import Input from '../editor/block/input.mjs'
 import InlineCode from '../editor/inlineTool/inline-code.mjs';
-import CodeTool from '../editor/block/code.mjs';
+//import CodeTool from '../editor/block/code.mjs';
 import EditorjsList from '../editor/block/editorjs-list.mjs';
->>>>>>> 2b4550c (构建了整体页面布局):src/views/blockEditor.mjs
+import { Controller } from '../Controller/Controller.mjs';
+import { Runner } from '../Runner/Runner.mjs';
 
 
 const idIndexMap = {};
+const myRunner = new Runner();
+//为controller绑定消息回调函数
+const controller = new Controller(myRunner.callback);
 
+// first define the tools to be made avaliable in the columns
+let column_tools = {
+    alert: Alert,
+    delimiter: Delimiter,
+    header: { class: Header, inlineToolbar: true },
 
+    embed: Embed,
+    input: Input,
+    checklist: {
+        class: Checklist,
+        inlineToolbar: true,
+    },
+    image: SimpleImage,
+    button: {
+        class: Button,
+
+    },
+    list: {
+        class: EditorjsList,
+        inlineToolbar: true,
+        config: {
+            defaultStyle: 'unordered'
+        },
+    },
+    code: editorjsCodeflask,
+    mark: {
+        class: MarkerTool,
+        shortcut: 'CMD+M',
+    },
+    inlineCode: {
+        class: InlineCode,
+        shortcut: 'CMD+SHIFT+M',
+    },
+    myTune: {
+        class: MyBlockTune
+
+    }
+}
 
 var editor = new EditorJS({
 
     holder: 'editorjs',
     tools: {
+        alert: Alert,
+        delimiter: Delimiter,
         header: { class: Header, inlineToolbar: true },
 
         embed: Embed,
@@ -52,6 +95,7 @@ var editor = new EditorJS({
         image: SimpleImage,
         button: {
             class: Button,
+
         },
         list: {
             class: EditorjsList,
@@ -60,7 +104,7 @@ var editor = new EditorJS({
                 defaultStyle: 'unordered'
             },
         },
-        code: CodeTool,
+        code: editorjsCodeflask,
         mark: {
             class: MarkerTool,
             shortcut: 'CMD+M',
@@ -70,181 +114,23 @@ var editor = new EditorJS({
             shortcut: 'CMD+SHIFT+M',
         },
         myTune: {
-            class: MyBlockTune,
-            data: { doc: document },
+            class: MyBlockTune
 
         },
+        columns: {
+            class: editorjsColumns,
+            config: {
+                EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
+                tools: column_tools, // IMPORTANT! ref the column_tools
+                tunes: ['myTune']
+            }
+        }
 
     },
-    tunes: ['myTune']
+    tunes: ['myTune'],
 
 })
 
-<<<<<<< HEAD:src/blockEditor.js
-
-console.log('editor', editor)
-window.DRAPI.saveFile((dataDir) => {
-    console.log('saveFile')
-    editor.clear()
-    editor.save().then((outputData) => {
-        console.log
-            ('文章数据：', outputData);
-        //writeFile(dataDir, JSON.stringify(outputData))
-        console.log(dataDir);
-        window.DRAPI.write(dataDir, JSON.stringify(outputData)).then(() => {
-            console.log('File written successfully.');
-        }).catch((error) => {
-            console.log('写入文件失败：', error);
-        });
-
-    }).catch((error) => {
-        console.log('保存失败：', error)
-    });
-}
-)
-
-window.DRAPI.recoverFile((dataDir) => {
-    window.DRAPI.read(dataDir).then((outputData) => {
-        console.log('读取文件成功：', outputData);
-        const data = JSON.parse(outputData);
-        console.log(data);
-
-        editor.destroy()
-        // 在这里处理读取到的数据
-        editor = new EditorJS({
-
-            holder: 'editorjs',
-            tools: {
-                header: { class: Header, inlineToolbar: true },
-
-                embed: Embed,
-                input: Input,
-                checklist: {
-                    class: Checklist,
-                    inlineToolbar: true,
-                },
-                image: SimpleImage,
-                button: {
-                    class: Button,
-                    data: {}
-                },
-                list: {
-                    class: EditorjsList,
-                    inlineToolbar: true,
-                    config: {
-                        defaultStyle: 'unordered'
-                    },
-                },
-                code: CodeTool,
-                mark: {
-                    class: MarkerTool,
-                    shortcut: 'CMD+M',
-                },
-                inlineCode: {
-                    class: InlineCode,
-                    shortcut: 'CMD+SHIFT+M',
-                },
-                myTune: MyBlockTune,
-
-            },
-            tunes: ['myTune'],
-            data: data
-
-
-        })
-    }).catch((error) => {
-        console.log('读取文件失败：', error);
-    });
-}
-)
-
-window.DRAPI.openFile((dataDir) => {
-    window.DRAPI.read(dataDir).then((outputData) => {
-        console.log('读取文件成功：', outputData);
-        const data = JSON.parse(outputData);
-        console.log(data);
-
-        editor.destroy()
-        // 在这里处理读取到的数据
-        editor = new EditorJS({
-
-            holder: 'editorjs',
-            tools: {
-                header: { class: Header, inlineToolbar: true },
-
-                embed: Embed,
-                input: Input,
-                checklist: {
-                    class: Checklist,
-                    inlineToolbar: true,
-                },
-                image: SimpleImage,
-                button: {
-                    class: Button,
-                    data: {}
-                },
-                list: {
-                    class: EditorjsList,
-                    inlineToolbar: true,
-                    config: {
-                        defaultStyle: 'unordered'
-                    },
-                },
-                code: CodeTool,
-                mark: {
-                    class: MarkerTool,
-                    shortcut: 'CMD+M',
-                },
-                inlineCode: {
-                    class: InlineCode,
-                    shortcut: 'CMD+SHIFT+M',
-                },
-                myTune: MyBlockTune,
-
-            },
-            tunes: ['myTune'],
-            data: data
-
-
-        })
-    }).catch((error) => {
-        console.log('读取文件失败：', error);
-    });
-})
-
-document.addEventListener('DOMContentLoaded', async () => {
-
-    const clearButton = document.getElementById('clear');
-    clearButton.addEventListener('click', async () => {
-        console.log('clear data')
-        editor.blocks.clear()
-
-
-    });
-
-    const insertButton = document.getElementById('insert');
-    insertButton.addEventListener('click', async () => {
-        console.log('insert data')
-        insertBlockAtIndex("header", { text: "hello world" }, 0);
-    });
-
-    const getIDButton = document.getElementById('getID');
-    getIDButton.addEventListener('click', async () => {
-        console.log('getID')
-        const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
-        console.log(editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()))
-        console.log('id', id)
-        getBlockIndexByID(id).then((index) => {
-            console.log('index', index)
-        })
-    });
-});
-
-
-
-
-=======
->>>>>>> 2b4550c (构建了整体页面布局):src/views/blockEditor.mjs
 //WebSocket通信
 const ws = new WebSocket("ws://127.0.0.1:5200/");
 ws.onopen = function (event) {
@@ -293,53 +179,50 @@ async function getBlockIndexByID(id) {
 }
 
 
+
+
 //侧边栏
-const property = document.getElementById('property');
-const event = document.getElementById('event');
-const addWorkflowBtn = document.getElementById('add-workflow');
-addWorkflowBtn.addEventListener('click', () => {
-    const workflowList = document.getElementById('workflow-list');
-    workflowList.style.display = 'block';
-    document.querySelector('.primary').addEventListener('click', () => {
-        const eventType = document.getElementById('eventType').value;
-        const action = document.getElementById('action').value;
 
-        //todo
-        workflowList.style.display = 'none';
-    });
+// const addWorkflowBtn = document.getElementById('add-workflow');
+// addWorkflowBtn.addEventListener('click', () => {
+//     const workflowList = document.getElementById('workflow-list');
+//     workflowList.style.display = 'block';
+//     document.querySelector('.primary').addEventListener('click', () => {
+//         const eventType = document.getElementById('eventType').value;
+//         const action = document.getElementById('action').value;
+//         const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id;
 
-    document.querySelector('.cancel').addEventListener('click', () => {
-        document.getElementById('eventType').selectedIndex = 0;
-        document.getElementById('action').selectedIndex = 0;
-        workflowList.style.display = 'none';
-    });
-})
+//         editor.save().then((outputData) => {
+//             console.log('保存成功：', outputData);
+//             console.log('index', editor.blocks.getCurrentBlockIndex())
+//             const blockType = outputData.blocks[editor.blocks.getCurrentBlockIndex()].type
+//             myRunner.bind({
+//                 "eventType": eventType,
+//                 "flowId": action,
+//                 "blockId": id,
+//                 "blockType": blockType
+//             }, controller, editor)
+//         }).catch((error) => {
+//             console.log('保存失败：', error);
+//         });
 
 
 
-property.addEventListener('click', () => {
-    property.style.backgroundColor = '#575757';
-    event.style.backgroundColor = '#6c6c6c';
-    showProperty();
-})
-event.addEventListener('click', () => {
-    property.style.backgroundColor = '#6c6c6c';
-    event.style.backgroundColor = '#575757';
-    showEvent();
-})
+//         //todo
+//         workflowList.style.display = 'none';
+//     });
 
-function showProperty() {
-    const propertyContent = document.getElementById('property-content');
-    const eventContent = document.getElementById('event-content');
-    propertyContent.style.display = 'block';
-    eventContent.style.display = 'none';
-}
-function showEvent() {
-    const propertyContent = document.getElementById('property-content');
-    const eventContent = document.getElementById('event-content');
-    propertyContent.style.display = 'none';
-    eventContent.style.display = 'block';
-}
+//     document.querySelector('.cancel').addEventListener('click', () => {
+//         document.getElementById('eventType').selectedIndex = 0;
+//         document.getElementById('action').selectedIndex = 0;
+//         workflowList.style.display = 'none';
+//     });
+// })
+
+
+
+
+
 
 
 
@@ -382,8 +265,8 @@ function createMenu(data) {
         } else {
             menuItem.addEventListener('click', () => {
                 //window.location.href = item.url;
-
-                document.getElementById('args-input').value = "{{" + item.url + "}}";
+                const argsInput = document.getElementById('args-input');
+                argsInput.value = argsInput.value + item.url + "}";
                 document.getElementById('menu').innerHTML = '';
 
             });
@@ -400,7 +283,7 @@ function createMenu(data) {
 }
 
 
-
+/*
 //buildDropdown(menuData);
 //监听args-input焦点事件
 const argsInput = document.getElementById('args-input');
@@ -417,6 +300,9 @@ argsInput.addEventListener('focus', () => {
         menuContainer.appendChild(createMenu(transOutputToMenuData(outputData)));
     })
 });
+*/
+
+
 
 
 
@@ -494,7 +380,10 @@ console.log('blockEditor.mjs loaded');
 
 
 
-
+// 将 editor, controller, myRunner 挂载到全局对象
+window.editor = editor;
+window.controller = controller;
+window.myRunner = myRunner;
 
 window.parent.DRAPI.saveFile((dataDir) => {
     console.log('saveFile')
@@ -503,8 +392,8 @@ window.parent.DRAPI.saveFile((dataDir) => {
         console.log
             ('文章数据：', outputData);
         //writeFile(dataDir, JSON.stringify(outputData))
-        console.log(dataDir);
-        window.DRAPI.write(dataDir, JSON.stringify(outputData)).then(() => {
+
+        window.parent.DRAPI.write(dataDir, JSON.stringify(outputData)).then(() => {
             console.log('File written successfully.');
         }).catch((error) => {
             console.log('写入文件失败：', error);
@@ -539,7 +428,7 @@ window.parent.DRAPI.recoverFile((dataDir) => {
                 image: SimpleImage,
                 button: {
                     class: Button,
-                    data: {}
+
                 },
                 list: {
                     class: EditorjsList,
@@ -548,7 +437,7 @@ window.parent.DRAPI.recoverFile((dataDir) => {
                         defaultStyle: 'unordered'
                     },
                 },
-                code: CodeTool,
+                code: editorjsCodeflask,
                 mark: {
                     class: MarkerTool,
                     shortcut: 'CMD+M',
@@ -557,7 +446,17 @@ window.parent.DRAPI.recoverFile((dataDir) => {
                     class: InlineCode,
                     shortcut: 'CMD+SHIFT+M',
                 },
-                myTune: MyBlockTune,
+                myTune: {
+                    class: MyBlockTune
+
+                },
+                columns: {
+                    class: editorjsColumns,
+                    config: {
+                        EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
+                        tools: column_tools // IMPORTANT! ref the column_tools
+                    }
+                }
 
             },
             tunes: ['myTune'],
@@ -625,34 +524,69 @@ window.parent.DRAPI.openFile((dataDir) => {
     });
 })
 
-//document.addEventListener('DOMContentLoaded', async () => {
-/*
-        const clearButton = document.getElementById('clear');
-        clearButton.addEventListener('click', async () => {
-            console.log('clear data')
-            editor.blocks.clear()
- 
- 
-        });
- 
-        const insertButton = document.getElementById('insert');
-        insertButton.addEventListener('click', async () => {
-            console.log('insert data')
-            editor.blocks.insert("header", { text: "hello world" }, {}, 0, true)
-        });
- 
-        const getIDButton = document.getElementById('getID');
-        getIDButton.addEventListener('click', async () => {
-            console.log('getID')
-            const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
-            console.log(editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()))
-            console.log('id', id)
-            getBlockIndexByID(id).then((index) => {
-                console.log('index', index)
-            })
-        });
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const clearButton = document.getElementById('clear');
+    clearButton.addEventListener('click', async () => {
+        console.log('clear data')
+        editor.blocks.clear()
+
+
     });
-    */
+
+    const insertButton = document.getElementById('insert');
+    insertButton.addEventListener('click', async () => {
+        console.log('insert data')
+        editor.blocks.insert("header", { text: "hello world" }, {}, 0, true)
+    });
+
+    const getIDButton = document.getElementById('getID');
+    getIDButton.addEventListener('click', async () => {
+        console.log('getID')
+        const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
+        //console.log(editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()))
+        //console.log('id', editor.blocks.getById(id).call('setClickListener', controller));
+        //console.log(controller.buttonAPI);
+        controller.buttonAPI.setClickListener(editor, id);
+
+        getBlockIndexByID(id).then((index) => {
+            console.log('index', index)
+        })
+    });
+
+
+
+    const argsInput = document.getElementById('args-input');
+    let oldValue = argsInput.value; // 初始化旧值
+
+    argsInput.addEventListener('input', function (event) {
+        let newValue = event.target.value; // 获取新值
+        let increment = ''; // 用来保存增量
+
+        // 用户增加了内容
+        increment = newValue.substring(oldValue.length);
+        console.log(increment);
+        if (increment === '{') {
+
+            editor.save().then((outputData) => {
+                console.log('args-input focus', outputData);
+                //将outputData转换为menuData的形式
+                console.log(transOutputToMenuData(outputData));
+
+                // 清空menu容器中的内容
+                const menuContainer = document.getElementById('menu');
+                menuContainer.innerHTML = '';
+
+                menuContainer.appendChild(createMenu(transOutputToMenuData(outputData)));
+            });
+
+
+        }
+        oldValue = newValue;
+    });
+});
+
+
 
 
 

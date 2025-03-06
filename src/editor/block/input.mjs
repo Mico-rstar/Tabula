@@ -5,6 +5,8 @@ class Input {
         this.readOnly = readOnly;
         this.data = data;
         this.config = config;
+        this.input;
+        this.id;
     }
     static get toolbox() {
         return {
@@ -16,20 +18,56 @@ class Input {
     render() {
         const wrapper = document.createElement('div');
 
-        const input = document.createElement('input');
-        input.value = this.data.content ? this.data.content : '';
+        this.input = document.createElement('input');
+        this.input.value = this.data.content ? this.data.content : '';
 
-        wrapper.appendChild(input)
+        wrapper.appendChild(this.input)
 
         return wrapper;
     }
 
 
     save(blockContent) {
-        const input = blockContent.querySelector('input');
+
         return {
-            content: input.value
+            content: this.input.value
         }
+    }
+
+    //失去焦点事件
+    setBlurListener(controller) {
+        this.id = controller.id;
+        this.input.addEventListener("blur", () => {
+            controller.callback({ "type": "Input", "event": "blur", "id": this.id });
+        }
+        );
+    }
+
+    //聚焦事件
+    setFocusListener(controller) {
+        this.id = controller.id;
+        this.input.addEventListener("focus", () => {
+            controller.callback({ "type": "Input", "event": "blur", "id": this.id });
+        }
+        );
+    }
+
+    //change事件
+    setChangeListener(controller) {
+        this.id = controller.id;
+        this.input.addEventListener("change", () => {
+            controller.callback({ "type": "Input", "event": "blur", "id": this.id });
+        }
+        );
+    }
+
+    //input事件
+    setInputListener(controller) {
+        this.id = controller.id;
+        this.input.addEventListener("input", () => {
+            controller.callback({ "type": "Input", "event": "blur", "id": this.id });
+        }
+        );
     }
 }
 export {

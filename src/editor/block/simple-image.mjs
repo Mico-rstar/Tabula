@@ -49,6 +49,7 @@ class h {
         icon: s
       }
     ];
+    this.id;
   }
   /**
    * Creates a Block:
@@ -235,6 +236,27 @@ class h {
     this.tunes.forEach((t) => {
       this.nodes.imageHolder.classList.toggle(this.CSS.imageHolder + "--" + t.name.replace(/([A-Z])/g, (e) => `-${e[0].toLowerCase()}`), !!this.data[t.name]), t.name === "stretched" && this.api.blocks.stretchBlock(this.blockIndex, !!this.data.stretched);
     });
+  }
+
+
+  //图片加载完成事件
+  setLoadListener(controller) {
+    this.id = controller.id;
+    this.nodes.image.addEventListener("load", () => {
+      controller.callback({ "type": "image", "event": "load", "id": this.id });
+      console.log(this);
+    }
+    );
+  }
+
+  //图片点击事件
+  setClickListener(controller) {
+    this.id = controller.id;
+    this.nodes.image.addEventListener("click", () => {
+      controller.callback({ "type": "image", "event": "click", "id": this.id });
+      console.log(this);
+    }
+    );
   }
 }
 export {

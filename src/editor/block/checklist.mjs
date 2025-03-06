@@ -135,6 +135,7 @@ class f {
           break;
       }
     }, !1), this._elements.wrapper.addEventListener("click", (e) => {
+      console.log("click", e);
       this.toggleCheckbox(e);
     }), this._elements.wrapper);
   }

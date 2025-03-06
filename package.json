@@ -24,6 +24,7 @@
     "electron": "^33.3.1"
   },
   "dependencies": {
+    "@calumk/editorjs-codeflask": "^1.0.10",
     "@editorjs/checklist": "^1.6.0",
     "@editorjs/code": "^2.9.3",
     "@editorjs/editorjs": "^2.30.7",

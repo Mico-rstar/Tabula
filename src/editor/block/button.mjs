@@ -4,6 +4,9 @@
 class Button {
     constructor({ data: t, config: e, api: a, readOnly: r }) {
         this.data = t, this.config = e, this.api = a, this.readOnly = r;
+        this.btn;
+        this.id;
+
 
     }
     render() {
@@ -29,12 +32,14 @@ class Button {
         newButton.style.cursor = 'pointer';
         newButton.style.width = '15%';
         newButton.innerText = this.data.btnText ? this.data.btnText : '新按钮';
+        this.btn = newButton;
 
         var settingButton = document.createElement('button');
-        settingButton.style.display = 'None';
+        settingButton.style.display = 'block';
         settingButton.style.textAlign = 'center';
         settingButton.style.color = 'white';
         settingButton.style.verticalAlign = 'center'
+        settingButton.backgroundColor = "#ffffff"
         settingButton.innerText = '⚙️';
 
         btnWrapper.appendChild(newButton);
@@ -42,7 +47,7 @@ class Button {
 
         // 容器
         var container = document.createElement('div');
-        container.style.display = 'flex';
+        container.style.display = 'none';
         container.style.flexDirection = 'column';
         container.style.backgroundColor = '#1b1b1b';
         container.style.padding = '20px';
@@ -128,6 +133,18 @@ class Button {
             icon: '<svg width="17" height="15" viewBox="0 0 336 276" xmlns="http://www.w3.org/2000/svg"><path d="M291 150V79c0-19-15-34-34-34H79c-19 0-34 15-34 34v42l67-44 81 72 56-29 42 30zm0 52l-43-30-56 30-81-67-66 39v23c0 19 15 34 34 34h178c17 0 31-13 34-29zM79 0h178c44 0 79 35 79 79v118c0 44-35 79-79 79H79c-44 0-79-35-79-79V79C0 35 35 0 79 0z"/></svg>'
         };
     }
+
+    //点击事件
+    setClickListener(controller) {
+        this.id = controller.id;
+        this.btn.addEventListener("click", () => {
+            controller.callback({ "type": "Button", "event": "click", "id": this.id });
+            console.log(this);
+        }
+        );
+    }
+
+
 }
 
 export {
