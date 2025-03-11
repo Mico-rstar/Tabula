@@ -30,7 +30,7 @@ class Button {
         newButton.style.textAlign = 'center';
         newButton.style.color = '#ffffff';
         newButton.style.cursor = 'pointer';
-        newButton.style.width = '15%';
+        newButton.style.width = 'auto';
         newButton.innerText = this.data.btnText ? this.data.btnText : '新按钮';
         this.btn = newButton;
 
@@ -102,10 +102,10 @@ class Button {
 
         completedButton.addEventListener('click', () => {
             container.style.display = 'none';
-            settingButton.style.display = 'flex';
+            settingButton.style.display = 'block';
         });
         settingButton.addEventListener('click', () => {
-            container.style.display = 'flex';
+            container.style.display = 'block';
             settingButton.style.display = 'none';
         });
 

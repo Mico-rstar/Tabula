@@ -10,6 +10,7 @@ export const messageHandlers = {//消息处理函数
         const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
         confirm(ws, data.requestId)
     },
+
     "confirm": (data, ws, editor) => {
         console.log('处理服务端回复消息:', data);
         // 清除已处理的消息

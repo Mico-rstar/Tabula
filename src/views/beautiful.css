@@ -438,6 +438,14 @@ header a {
     justify-content: space-between;
 }
 
+.args-input-list-item {
+    margin-bottom: 10px;
+}
+
+.args-input-key {
+    margin-right: 20px;
+}
+
 #args-output-container {
     max-width: 600px;
     margin: auto;
@@ -634,4 +642,63 @@ textarea {
 
 .confirm-btn {
     background-color: #dcdcdc;
+}
+
+.args-input-list-add {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+.icon-add {
+    width: 20px;
+    height: 20px;
+    float: right;
+}
+
+.icon-remove {
+    width: 20px;
+    height: 20px;
+    float: right;
+}
+
+
+
+
+.mul-menu {
+    max-width: 200px;
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 400px;
+    background-color: rgb(77, 73, 73);
+    border: 1px solid #857c7c;
+    border-radius: 8px;
+}
+
+.mul-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.mul-menu-item>span {
+    margin-left: 5px;
+}
+
+.mul-sub-menu {
+    display: none;
+    margin-left: 5px;
+}
+
+/* 箭头默认样式 */
+.mul-menu-item>.toggle-icon {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+}
+
+/* 旋转后的样式 */
+.mul-menu-item>.toggle-icon.rotated {
+    transform: rotate(90deg);
 }

@@ -18,11 +18,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@calumk/editorjs-paragraph-linebreakable"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.19.0/dist/editor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mdgaziur/EditorJS-LaTeX@latest/dist/editorjs-latex.bundle-min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/mdgaziur/EditorJS-LaTeX@latest/dist/editorjs-latex.bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+    </link>
+
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+
 
     <div class="view">
         <div id="content">
 
+
             <div id="editorjs"></div>
+
             <button id="getID">getID</button>
             <button id="insert">insert</button>
             <button id="clear">clear</button>
@@ -67,7 +78,7 @@
                     </div>
                     <div class="form-group">
                         <label for="input">入参配置</label>
-                        <input type="text" id="args-input" name="input" placeholder="{{value}}表示变量"></input>
+                        <input type="text" id="args-input" name="input" placeholder="{value}表示变量"></input>
                         <div id="menu"></div>
 
                     </div>

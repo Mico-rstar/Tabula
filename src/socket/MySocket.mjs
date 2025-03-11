@@ -22,6 +22,7 @@ class MySocket {
         };
     }
 
+    //返回Promise对象
     sendMsg(msg) {
         //检查ws的状态
         if (this.ws.readyState !== 1) {

@@ -22,6 +22,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
 
+    <!--内部依赖-->
+    <script src="../utils/FlowSetting.js"></script>
+    <script src="../utils/Menu.js"></script>
+
 
 
     <header>
@@ -122,19 +126,22 @@
         <div id="args">
 
             <div id="args-input">
-                <h2 class="io-class">输入</h2>
-                <hr>
-                <div class="args-input-content">
-                    <span class="args-input-item">
-                        <label class="args-input-key">key</label>
-                        <input type="text" id="args-input" name="input" placeholder="{{value}}表示变量"></input>
-                    </span>
+                <div class="args-input-block">
+                    <h2 class="io-class">输入</h2>
+                    <hr>
+                    <div class="args-input-content">
+                        <span class="args-input-item">
+                            <label class="args-input-key">key</label>
+                            <input type="text" id="args-input" name="input" placeholder="{value}表示变量"></input>
+                        </span>
+                    </div>
+                    <hr>
                 </div>
-                <hr>
+
             </div>
 
             <div id="args-output">
-                <h2 class="io-class">输出</h2>
+                <h2 class="io-class" id="args-output-title">输出</h2>
                 <hr>
                 <div id="args-output-container"></div>
                 <hr>

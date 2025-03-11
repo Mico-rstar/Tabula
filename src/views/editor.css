@@ -4,12 +4,25 @@ body {
 }
 
 .view {
-    overflow: scroll;
+    width: 100%;
+    margin-left: 50px;
 }
 
-#editor {
-    width: 100%;
-    height: 100%;
+.row {}
+
+.column {
+    float: left;
+    flex-direction: column;
+}
+
+#head {
+    height: 10px;
+}
+
+.number_items {
+    margin-bottom: 24px;
+    height: 15px;
+    font-size: 18;
 }
 
 
@@ -150,9 +163,10 @@ body {
 
 
 .menu {
-    width: 300px;
+    max-width: 300px;
     overflow-y: auto;
-    max-height: 400px;
+    overflow-x: auto;
+    max-height: 200px;
     background-color: rgb(77, 73, 73);
     border: 1px solid #857c7c;
     border-radius: 8px;

@@ -3,6 +3,8 @@ var id = document.getElementById("drawflow");
 const editor = new Drawflow(id);
 editor.reroute = true;
 
+
+
 const dataToImport = {
   "drawflow": {
     "Home": {
@@ -51,11 +53,13 @@ const workflowContainer = new Maintainer();
 //save data
 document.getElementsByClassName("btn-save")[0].addEventListener("click", function () {
   const flowData = editor.export();
+  console.log(flowData);
   console.log(workflowContainer.get()[workflowContainer.getId()]);
   workflowContainer.get()[workflowContainer.getId()].data = flowData;
 
   //将flowData转化为工作流引擎接口接收的格式
-  transformFlowData(flowData);
+  const newFlowData = transformFlowData(workflowContainer.get()[workflowContainer.getId()]);
+  console.log(newFlowData);
 
 });
 
@@ -81,6 +85,8 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
+
+
   console.log("drag");
   if (ev.type === "touchstart") {
     mobile_item_selec = ev.target.closest(".drag-drawflow").getAttribute('data-node');
@@ -113,41 +119,25 @@ function addNodeToDrawFlow(name, pos_x, pos_y) {
   pos_y = pos_y * (editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)) - (editor.precanvas.getBoundingClientRect().y * (editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)));
 
 
-  switch (name) {
-    case 'start':
-      var start = `
+
+  var nodeDiv = `
         <div>
-          <div class="title-box" ondblclick="showSidebar(event)"><i></i>开始</div>
+          <div class="title-box" ondblclick="showSidebar(event)"><i></i>`+ name + `</div>
         </div>
       `;
-      editor.addNode('start', 0, 1, pos_x, pos_y, 'start', { "input": {}, "output": {} }, start);
-      break;
-    case 'end':
-      var end = `
-          <div>
-            <div class="title-box" ondblclick="showSidebar(event)"><i></i> end</div>
-          </div>
-          `
-      editor.addNode('end', 1, 0, pos_x, pos_y, 'end', {}, end);
-      break;
+  if (name === 'start')
+    editor.addNode(name, 0, 1, pos_x, pos_y, name, window.nodeMaps[name], nodeDiv);
+  else if (name === 'end')
+    editor.addNode(name, 1, 0, pos_x, pos_y, name, window.nodeMaps[name], nodeDiv);
+  else
+    editor.addNode(name, 1, 1, pos_x, pos_y, name, window.nodeMaps[name], nodeDiv);
+  // if (name === 'start')
+  //   editor.addNode(name, 0, 1, pos_x, pos_y, name, {}, nodeDiv);
+  // else if (name === 'end')
+  //   editor.addNode(name, 1, 0, pos_x, pos_y, name, {}, nodeDiv);
+  // else
+  //   editor.addNode(name, 1, 1, pos_x, pos_y, name, {}, nodeDiv);
 
-    case 'test':
-      var test = `
-          <div>
-            <div class="title-box" ondblclick="showSidebar(event)"><i></i> test </div>
-            <div class="box">
-              <p>test</p>
-              <input type="text" df-db-dbname placeholder="DB name"><br><br>
-              <input type="text" df-db-key placeholder="DB key">
-              <p>Output Log</p>
-            </div>
-          </div>
-          `;
-      editor.addNode('test', 1, 3, pos_x, pos_y, 'test', { "db": { "dbname": '', "key": '' } }, test);
-      break;
-
-    default:
-  }
   document.querySelectorAll('.outputs').forEach(output => {
     output.addEventListener('mousedown', () => {
       console.log("click");
@@ -208,96 +198,81 @@ function changeMode(option) {
 
 
 
-//加载工作流输出
-function createDataItem(key, value) {
-  const item = document.createElement('div');
-  item.className = 'args-output-item';
-
-  const keyElement = document.createElement('span');
-  keyElement.className = 'args-output-key';
-  keyElement.textContent = key;
-
-  const valueElement = document.createElement('span');
-  valueElement.className = 'args-output-type';
-  valueElement.textContent = value;
-
-  item.appendChild(keyElement);
-  item.appendChild(valueElement);
-
-  return item;
-}
 
 
-//递归地创建输出对象信息
-function createObjectItem(key, obj) {
-  const item = document.createElement('div');
-  item.className = 'args-output-item';
 
-  const details = document.createElement('div');
-  details.className = 'args-output-item';
-  details.style.display = 'none';
-  for (const [key, value] of Object.entries(obj)) {
-    if (typeof value === 'object' && value !== null) {
-      details.appendChild(createObjectItem(key, value));
-    } else {
-      details.appendChild(createDataItem(key, value));
+
+const data = {
+  "start": {
+    "type": "start",
+    "name": "开始",
+    "description": "工作流开端",
+    "input_content": {
+      "title": "输入",
+      "data": {
+        "input1": ""
+      }
+    },
+    "output_content": {
+      "title": "输出",
+      "data": {
+        "message": "String"
+      }
+    }
+  },
+  "test": {
+    "type": "test",
+    "name": "测试",
+    "description": "测试节点",
+    "input_content": {
+      "title": "输入",
+      "data": {
+        "input1": "",
+        "input2": ""
+      }
+    },
+    "attempt_match": {
+      "title": "意图匹配",
+      "data": []
+    },
+    "output_content": {
+      "title": "输出",
+      "data": {
+        "message": "String",
+        "data": {
+          "content": "String",
+          "title": {
+            "content": "String",
+            "check": "Boolean"
+          }
+        }
+      }
+    }
+  },
+  "end": {
+    "type": "end",
+    "name": "结束",
+    "description": "工作流截止",
+    "input_content": {
+      "title": "输入",
+      "data": {
+        "input1": ""
+      }
+    },
+    "output_content": {
+      "title": "输出",
+      "data": {
+        "message": "String"
+      }
     }
   }
-
-  const arrow = document.createElement('span');
-  arrow.className = 'args-output-arrow';
-  arrow.textContent = '▶';
-  arrow.addEventListener('click', () => {
-    if (arrow.textContent === '▶') {
-      arrow.textContent = '▼';
-      details.style.display = 'block';
-    } else {
-      arrow.textContent = '▶';
-      details.style.display = 'none';
-    }
-  });
-
-  const keyElement = document.createElement('span');
-  keyElement.className = 'args-output-key';
-  keyElement.textContent = key;
-
-  item.appendChild(arrow);
-  item.appendChild(keyElement);
-  item.appendChild(details);
-
-  return item;
 }
-
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  const data = {
-    message: "String",
-    pdf_content: "String",
-    code: "Integer",
-    data: {
-      content: "String",
-      title: {
-        content: "String",
-        check: "Boolean"
-      }
-    },
-    err_msg: "String",
-    error_code: "String",
-    error_msg: "String"
-  };
 
-  //在侧边栏动态展示输出
-  const container = document.getElementById('args-output-container');
 
-  for (const [key, value] of Object.entries(data)) {
-    if (typeof value === 'object' && value !== null) {
-      container.appendChild(createObjectItem(key, value));
-    } else {
-      container.appendChild(createDataItem(key, value));
-    }
-  }
+
 
   //为flowlist添加动态事件
   const flowExpandBtn = document.getElementById('flow-expand-btn');
@@ -372,10 +347,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
   //动态添加节点
   const nodeList = document.getElementById("node-list");
-  nodeList.appendChild(createNodeItem('start', '开始'));
-  nodeList.appendChild(createNodeItem('end', '结束'));
-  nodeList.appendChild(createNodeItem('test', '测试'));
-  //window.ws.sendMsg
+
+  /*
+  window.ws.sendMsg({ "type": "getNodes", "data": {} }).then(
+    (data) => {
+      const nodeMaps = {};
+      for (const [key, node] of Object.entries(data)) {
+        nodeList.appendChild(createNodeItem(node.type, node.name));
+        nodeMaps[node.type] = node;
+      }
+      window.nodeMaps = nodeMaps;
+    }
+  );
+  */
+
+  const nodeMaps = {};
+  for (const [key, node] of Object.entries(data)) {
+    nodeList.appendChild(createNodeItem(node.type, node.name));
+    nodeMaps[node.type] = node;
+  }
+  window.nodeMaps = nodeMaps;
 
 });
 
@@ -400,6 +391,11 @@ function showSidebar(event) {
   const sidebar = document.getElementById('sidebar');
   sidebar.style.right = '0';
   console.log(event);
+  const flowData = editor.export();
+  const id = event.target.offsetParent.id.split('-')[1];
+  console.log(flowData.drawflow.Home.data[id].data);
+  const myFlowSetting = new FlowSetting(editor, id, flowData.drawflow.Home.data[id].data, getInputData(flowData, id));
+
   //console.log('showSidebar', event.target.offsetParent.id);
 }
 
@@ -455,9 +451,51 @@ function delFlowListItem(event) {
 
 
 // 将flowData转换为符合工作流引擎接口的格式
-function transformFlowData(flowData) {
+function transformFlowData(flowdata) {
 
+  const formedFlowData = { workflow_name: flowdata.name, tasks: {}, connections: [] };
+
+  for (const [id, object] of Object.entries(flowdata.data.drawflow.Home.data)) {
+    formedFlowData.tasks[id] = {
+      id: id,
+      name: object.data.name,
+      type: object.data.type,
+      input_content: object.data.input_content,
+    }
+    if (object.data.attempt_match) {
+      formedFlowData.tasks[id].attempt_match = object.data.attempt_match;
+    }
+    //连接节点
+    let index = 0;
+    for (const [output_n, obj] of Object.entries(object.outputs)) {
+      obj.connections.forEach(connection => {
+        formedFlowData.connections.push({
+          from: id,
+          to: connection.node,
+          branch: index
+        });
+      });
+      index++;
+    }
+
+  }
+  return formedFlowData;
 }
 
+
+function getInputData(flowData, id) {
+
+
+  const inputData = [];
+  for (const [input_n, obj] of Object.entries(flowData.drawflow.Home.data[id].inputs)) {
+    obj.connections.forEach(connection => {
+      nodeId = connection.node;
+      inputData.push(flowData.drawflow.Home.data[nodeId].data.output_content.data);
+
+    });
+  }
+  console.log(inputData);
+  return inputData;
+}
 
 
