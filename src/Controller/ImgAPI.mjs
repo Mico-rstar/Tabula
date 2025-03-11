@@ -15,6 +15,14 @@ export class ImgAPI {
         editor.blocks.getById(id).call('setClickListener', this);
     }
 
+    removeLoadListener(editor, id) {
+        editor.blocks.getById(id).call('removeLoadListener', this);
+    }
+
+    removeClickListener(editor, id) {
+        editor.blocks.getById(id).call('removeClickListener', this);
+    }
+
     callback(event) {
         console.log("ImgAPI", "recieve");
         this.callRunner(event);

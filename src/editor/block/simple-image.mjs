@@ -50,6 +50,9 @@ class h {
       }
     ];
     this.id;
+
+    this.handleLoad;
+    this.handleClick;
   }
   /**
    * Creates a Block:
@@ -239,24 +242,39 @@ class h {
   }
 
 
+  handleLoadMsg(controller) {
+    return function (event) {
+      controller.callback({ "type": "image", "event": "load", "id": this.id });
+
+    }
+  }
+
+  handleClickMsg(controller) {
+    return function (event) {
+      controller.callback({ "type": "image", "event": "click", "id": this.id });
+    }
+  }
+
   //图片加载完成事件
   setLoadListener(controller) {
     this.id = controller.id;
-    this.nodes.image.addEventListener("load", () => {
-      controller.callback({ "type": "image", "event": "load", "id": this.id });
-      console.log(this);
-    }
-    );
+    this.handleLoad = this.handleLoadMsg(controller);
+    this.nodes.image.addEventListener("load", this.handleLoad);
   }
 
   //图片点击事件
   setClickListener(controller) {
     this.id = controller.id;
-    this.nodes.image.addEventListener("click", () => {
-      controller.callback({ "type": "image", "event": "click", "id": this.id });
-      console.log(this);
-    }
-    );
+    this.handleClick = this.handleClickMsg(controller);
+    this.nodes.image.addEventListener("click", this.handleClick);
+  }
+
+  removeLoadListener() {
+    this.nodes.image.removeEventListener("load", this.handleLoad);
+  }
+
+  removeClickListener() {
+    this.nodes.image.removeEventListener("click", this.handleClick);
   }
 }
 export {

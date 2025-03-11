@@ -6,6 +6,8 @@ class Button {
         this.data = t, this.config = e, this.api = a, this.readOnly = r;
         this.btn;
         this.id;
+        //事件处理函数的闭包
+        this.handle;
 
 
     }
@@ -134,14 +136,26 @@ class Button {
         };
     }
 
+    handleClickMsg(controller) {
+        return function (event) {
+            controller.callback({ "type": "Button", "event": "click", "id": this.id });
+        }
+    }
+
     //点击事件
     setClickListener(controller) {
         this.id = controller.id;
-        this.btn.addEventListener("click", () => {
-            controller.callback({ "type": "Button", "event": "click", "id": this.id });
-            console.log(this);
-        }
-        );
+        console.log(controller);
+        this.handle = this.handleClickMsg(controller);
+        console.log(this.handle);
+        this.btn.addEventListener("click", this.handle);
+    }
+
+    //删除点击事件
+    removeClickListener(controller) {
+        this.id = controller.id;
+        console.log("remove click");
+        this.btn.removeEventListener("click", this.handle);
     }
 
 

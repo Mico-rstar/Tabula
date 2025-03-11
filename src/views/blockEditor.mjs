@@ -115,7 +115,7 @@ var editor = new EditorJS({
             config: {
                 EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
                 tools: column_tools, // IMPORTANT! ref the column_tools
-                tunes: ['myTune']
+                tunes: ['Tune']
             }
         }
 
@@ -376,11 +376,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         //console.log('id', editor.blocks.getById(id).call('setClickListener', controller));
         //console.log(controller.buttonAPI);
         //controller.buttonAPI.setClickListener(editor, id);
-        console.log(editor.blocks.getBlockByIndex(1))
-        editor.blocks.getBlockByIndex(1).selected = true;
+        //console.log(editor.blocks.getBlockByIndex(1))
+        //editor.blocks.getBlockByIndex(1).selected = true;
+        console.log(myRunner);
 
         getBlockIndexByID(id).then((index) => {
-            console.log('index', index)
+            console.log(id, index)
         })
     });
 

@@ -198,3 +198,44 @@ body {
 .menu-item>.toggle-icon.rotated {
     transform: rotate(90deg);
 }
+
+
+.input-block {
+    border: #ccc;
+    width: 100%;
+    height: 20px;
+    font-size: 16px;
+}
+
+.input-block-div {
+    width: 100%;
+    height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.workflow-item {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.workflow-item-content-del {
+    display: flex;
+    margin-left: auto;
+}
+
+.workflow-item-content-event {
+    font-size: 13px;
+    border-radius: 2px;
+}
+
+.workflow-item-content-flowname {
+    font-size: 13px;
+}

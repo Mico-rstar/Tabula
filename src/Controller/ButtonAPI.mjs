@@ -10,6 +10,10 @@ export class ButtonAPI {
         editor.blocks.getById(id).call('setClickListener', this);
     }
 
+    removeClickListener(editor, id) {
+        editor.blocks.getById(id).call('removeClickListener', this);
+    }
+
     callback(event) {
         console.log("ButtonAPI", "recieve");
         this.callRunner(event);
