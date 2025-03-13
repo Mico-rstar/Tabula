@@ -15,9 +15,9 @@ import { Controller } from '../Controller/Controller.mjs';
 import { Runner } from '../Runner/Runner.mjs';
 import MySocket from '../socket/MySocket.mjs';
 import { createMenu, transDataToMenuData } from '../utils/Menu.mjs';
+import { getBlockIndexByID } from '../utils/IndexRId.mjs'
 
 
-const idIndexMap = {};
 const myRunner = new Runner();
 //为controller绑定消息回调函数
 const controller = new Controller(myRunner.callback);
@@ -136,35 +136,6 @@ ws.sendMsg({ type: 'test-from-client', data: {} }).then((data) => {
     console.log('服务端回复', data);
 })
 window.ws = ws;
-
-
-//建立id与index映射
-async function buildIdIndexMap(editor) {
-    return editor.save().then((outputData) => {
-        for (let i = 0; i < outputData.blocks.length; i++) {
-            const block = outputData.blocks[i];
-            // 将id与index映射保存到全局变量中
-            idIndexMap[block.id] = i;
-        }
-    }).catch((error) => {
-        console.log('保存失败：', error)
-    });
-}
-
-async function getBlockIndexByID(id) {
-
-    await buildIdIndexMap(editor);
-    if (idIndexMap[id] !== undefined) {
-        return idIndexMap[id];
-    } else {
-        console.log('id not found in idIndexMap');
-        return -1;
-    }
-
-
-}
-
-
 
 
 
@@ -365,7 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const insertButton = document.getElementById('insert');
     insertButton.addEventListener('click', async () => {
         console.log('insert data')
-        editor.blocks.insert("header", { text: "hello world" }, {}, 0, true)
+        editor.blocks.insert("paragraph", { text: "hello world" }, {}, 0, true)
     });
 
     const getIDButton = document.getElementById('getID');
@@ -378,11 +349,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         //controller.buttonAPI.setClickListener(editor, id);
         //console.log(editor.blocks.getBlockByIndex(1))
         //editor.blocks.getBlockByIndex(1).selected = true;
-        console.log(myRunner);
 
-        getBlockIndexByID(id).then((index) => {
-            console.log(id, index)
-        })
+        const defaultBlockData = await editor.blocks.composeBlockData("checklist");
+        console.log(defaultBlockData);
+        const index = await getBlockIndexByID(id, editor);
+        console.log(index);
     });
 
 

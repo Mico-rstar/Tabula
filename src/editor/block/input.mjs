@@ -6,7 +6,6 @@ class Input {
         this.data = data;
         this.config = config;
         this.input;
-        this.id;
 
         //处理事件闭包
         this.InputHandle;
@@ -59,63 +58,60 @@ class Input {
     save(blockContent) {
 
         return {
-            content: this.input.value
+            content: this.input.value,
+            placeholder: this.data.placeholder
         }
     }
 
-    handleBlurMsg(controller) {
+    handleBlurMsg(controller, id, bindId, data) {
         return function (event) {
-            controller.callback({ "type": "Input", "event": "blur", "id": this.id, "data": this.data });
+            controller.callback({ "type": "Input", "event": "blur", "id": id, "data": data, "bindId": bindId });
 
         }
     }
 
-    handleFocusMsg(controller) {
+    handleFocusMsg(controller, id, bindId, data) {
         return function (event) {
-            controller.callback({ "type": "Input", "event": "focus", "id": this.id, "data": this.data });
+            controller.callback({ "type": "Input", "event": "focus", "id": id, "data": data, "bindId": bindId });
         }
     }
 
-    handleChangeMsg(controller) {
+    handleChangeMsg(controller, id, bindId, data) {
         return function (event) {
-            controller.callback({ "type": "Input", "event": "change", "id": this.id, "data": this.data });
+            controller.callback({ "type": "Input", "event": "change", "id": id, "data": data, "bindId": bindId });
         }
 
     }
 
-    handleInputMsg(controller) {
+    handleInputMsg(controller, id, bindId, data) {
         return function (event) {
-            controller.callback({ "type": "Input", "event": "input", "id": this.id, "data": this.data });
+            controller.callback({ "type": "Input", "event": "input", "id": id, "data": data, "bindId": bindId });
         }
 
     }
 
     //失去焦点事件
     setBlurListener(controller) {
-        this.id = controller.id;
-        this.BlurHandle = this.handleBlurMsg(controller);
+        this.BlurHandle = this.handleBlurMsg(controller, controller.id, controller.bindId, this.data);
         this.input.addEventListener("blur", this.BlurHandle);
     }
 
     //聚焦事件
     setFocusListener(controller) {
         this.id = controller.id;
-        this.FocusHandle = this.handleFocusMsg(controller);
+        this.FocusHandle = this.handleFocusMsg(controller, controller.id, controller.bindId, this.data);
         this.input.addEventListener("focus", this.FocusHandle);
     }
 
     //change事件
     setChangeListener(controller) {
-        this.id = controller.id;
-        this.ChangeHandle = this.handleChangeMsg(controller);
+        this.ChangeHandle = this.handleChangeMsg(controller, controller.id, controller.bindId, this.data);
         this.input.addEventListener("change", this.ChangeHandle);
     }
 
     //input事件
     setInputListener(controller) {
-        this.id = controller.id;
-        this.InputHandle = this.handleInputMsg(controller);
-        console.log(this.InputHandle);
+        this.InputHandle = this.handleInputMsg(controller, controller.id, controller.bindId, this.data);
         this.input.addEventListener("input", this.InputHandle);
     }
 

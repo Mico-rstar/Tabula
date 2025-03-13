@@ -3,10 +3,12 @@ export class ButtonAPI {
     constructor(fun) {
         this.callRunner = fun;
         this.id;
+        this.bindId;
     }
 
-    setClickListener(editor, id) {
+    setClickListener(editor, id, bindId) {
         this.id = id;
+        this.bindId = bindId;
         editor.blocks.getById(id).call('setClickListener', this);
     }
 

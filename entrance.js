@@ -21,14 +21,14 @@ document.querySelectorAll('.view-btn').forEach(button => {
 });
 
 function showEditor() {
-    document.getElementById('editor-option').style.background = '#faf8f8';
-    document.getElementById('flow-option').style.background = '#ddd6d6';
+    document.getElementById('editor-option').style.background = '#ffffff';
+    document.getElementById('flow-option').style.background = '#f4f3f3';
     document.getElementById('editor-view').style.display = 'block';
     document.getElementById('drawflow-view').style.display = 'none';
 }
 function showDrawflow() {
-    document.getElementById('editor-option').style.background = '#ddd6d6';
-    document.getElementById('flow-option').style.background = '#faf8f8';
+    document.getElementById('editor-option').style.background = '#f4f3f3';
+    document.getElementById('flow-option').style.background = '#ffffff';
     document.getElementById('editor-view').style.display = 'none';
     document.getElementById('drawflow-view').style.display = 'block';
 }

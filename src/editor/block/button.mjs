@@ -5,7 +5,7 @@ class Button {
     constructor({ data: t, config: e, api: a, readOnly: r }) {
         this.data = t, this.config = e, this.api = a, this.readOnly = r;
         this.btn;
-        this.id;
+
         //事件处理函数的闭包
         this.handle;
 
@@ -136,25 +136,20 @@ class Button {
         };
     }
 
-    handleClickMsg(controller) {
+    handleClickMsg(controller, id, bindId) {
         return function (event) {
-            controller.callback({ "type": "Button", "event": "click", "id": this.id });
+            controller.callback({ "type": "Button", "event": "click", "id": id, "bindId": bindId });
         }
     }
 
     //点击事件
     setClickListener(controller) {
-        this.id = controller.id;
-        console.log(controller);
-        this.handle = this.handleClickMsg(controller);
-        console.log(this.handle);
+        this.handle = this.handleClickMsg(controller, controller.id, controller.bindId);
         this.btn.addEventListener("click", this.handle);
     }
 
     //删除点击事件
     removeClickListener(controller) {
-        this.id = controller.id;
-        console.log("remove click");
         this.btn.removeEventListener("click", this.handle);
     }
 

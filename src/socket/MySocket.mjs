@@ -1,5 +1,7 @@
 import { messageHandlers } from "./msgHandler.mjs";
 import { sendMsgWithRes } from "./sender.mjs";
+
+
 class MySocket {
     constructor(url) {
         this.ws = new WebSocket(url);
@@ -14,7 +16,7 @@ class MySocket {
         this.ws.onmessage = function (event) {
             try {
                 const data = JSON.parse(event.data);
-                messageHandlers[data.type](data, this.ws, editor);
+                messageHandlers[data.type](data, this.ws);
             } catch (e) { console.log("parse-serverinfo-err", e) }
         };
         this.ws.onclose = function (event) {

@@ -16,13 +16,13 @@ export class Runner {
         let id = this.addRelationToMap(data);
         switch (data.blockType) {
             case "button":
-                this.bindButtonEvent(data.eventType, controller, editor, data.blockId);
+                this.bindButtonEvent(data.eventType, controller, editor, data.blockId, id);
                 break;
             case "input":
-                this.bindInputEvent(data.eventType, controller, editor, data.blockId);
+                this.bindInputEvent(data.eventType, controller, editor, data.blockId, id);
                 break;
             case "image":
-                this.bindImgEvent(data.eventType, controller, editor, data.blockId);
+                this.bindImgEvent(data.eventType, controller, editor, data.blockId, id);
             default:
                 break;
         }
@@ -49,10 +49,10 @@ export class Runner {
         }
     }
 
-    bindButtonEvent(eventType, controller, editor, blockId) {
+    bindButtonEvent(eventType, controller, editor, blockId, bindId) {
         switch (eventType) {
             case "click":
-                controller.buttonAPI.setClickListener(editor, blockId);
+                controller.buttonAPI.setClickListener(editor, blockId, bindId);
                 break;
             default:
                 break;
@@ -68,20 +68,19 @@ export class Runner {
         }
     }
 
-    bindInputEvent(eventType, controller, editor, blockId) {
+    bindInputEvent(eventType, controller, editor, blockId, bindId) {
         switch (eventType) {
             case "change":
-                controller.inputAPI.setChangeListener(editor, blockId);
+                controller.inputAPI.setChangeListener(editor, blockId, bindId);
                 break;
             case "blur":
-                controller.inputAPI.setBlurListener(editor, blockId);
+                controller.inputAPI.setBlurListener(editor, blockId, bindId);
                 break;
             case "focus":
-                controller.inputAPI.setFocusListener(editor, blockId);
+                controller.inputAPI.setFocusListener(editor, blockId, bindId);
                 break;
             case "input":
-                console.log("input");
-                controller.inputAPI.setInputListener(editor, blockId);
+                controller.inputAPI.setInputListener(editor, blockId, bindId);
                 break;
             default:
                 break;
@@ -106,13 +105,13 @@ export class Runner {
         }
     }
 
-    bindImgEvent(eventType, controller, editor, blockId) {
+    bindImgEvent(eventType, controller, editor, blockId, bindId) {
         switch (eventType) {
             case "click":
-                controller.imgAPI.setClickListener(editor, blockId);
+                controller.imgAPI.setClickListener(editor, blockId, bindId);
                 break;
             case "load":
-                controller.imgAPI.setLoadListener(editor, blockId);
+                controller.imgAPI.setLoadListener(editor, blockId, bindId);
                 break;
             default:
                 break;

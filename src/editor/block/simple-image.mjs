@@ -49,7 +49,6 @@ class h {
         icon: s
       }
     ];
-    this.id;
 
     this.handleLoad;
     this.handleClick;
@@ -242,30 +241,29 @@ class h {
   }
 
 
-  handleLoadMsg(controller) {
+  handleLoadMsg(controller, id, bindId) {
     return function (event) {
-      controller.callback({ "type": "image", "event": "load", "id": this.id });
+      controller.callback({ "type": "image", "event": "load", "id": id, "bindId": bindId });
 
     }
   }
 
-  handleClickMsg(controller) {
+  handleClickMsg(controller, id, bindId) {
     return function (event) {
-      controller.callback({ "type": "image", "event": "click", "id": this.id });
+      this.id;
+      controller.callback({ "type": "image", "event": "click", "id": id, "bindId": bindId });
     }
   }
 
   //图片加载完成事件
   setLoadListener(controller) {
-    this.id = controller.id;
-    this.handleLoad = this.handleLoadMsg(controller);
+    this.handleLoad = this.handleLoadMsg(controller, controller.id, controller.bindId);
     this.nodes.image.addEventListener("load", this.handleLoad);
   }
 
   //图片点击事件
   setClickListener(controller) {
-    this.id = controller.id;
-    this.handleClick = this.handleClickMsg(controller);
+    this.handleClick = this.handleClickMsg(controller, controller.id, controller.bindId);
     this.nodes.image.addEventListener("click", this.handleClick);
   }
 

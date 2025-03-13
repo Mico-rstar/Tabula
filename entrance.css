@@ -1,7 +1,13 @@
 #view-switcher {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
     padding: 10px;
-    background: #ddd6d6;
-    width: 100%;
+    background: #f4f3f3;
+    border-radius: 5px;
+    width: 20%;
 }
 
 #switcher {
@@ -10,7 +16,7 @@
     flex-direction: row;
     width: 200px;
     margin: auto;
-    background: #ddd6d6;
+    background: #f4f3f3;
 }
 
 
@@ -26,11 +32,11 @@
 }
 
 #editor-option {
-    background-color: #faf8f8;
+    background-color: white;
 }
 
 #flow-option {
-    background-color: #ddd6d6;
+    background-color: #f4f3f3;
 }
 
 
