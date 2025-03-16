@@ -13,7 +13,7 @@ export function createMenu(data) {
         if (item.children && item.children.length > 0) {
             const toggleIcon = document.createElement('span');
             toggleIcon.className = 'toggle-icon'; // 添加类名
-            toggleIcon.textContent = '>';
+            toggleIcon.textContent = '▶';
             menuItem.appendChild(toggleIcon);
 
             const subMenu = document.createElement('div');

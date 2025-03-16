@@ -1,8 +1,10 @@
 
-var id = document.getElementById("drawflow");
-const editor = new Drawflow(id);
-editor.reroute = true;
+//控制是否允许创建节点
+var allowDropSignal = false;
 
+var id = document.getElementById("drawflow");
+var editor = new Drawflow(id);
+editor.reroute = true;
 
 
 const dataToImport = {
@@ -18,6 +20,8 @@ editor.start();
 editor.import(dataToImport);
 
 editor.clearModuleSelected()
+
+editor.editor_mode = "view";
 
 
 class Maintainer {
@@ -96,6 +100,7 @@ function drag(ev) {
 }
 
 function drop(ev) {
+  if (allowDropSignal === false) return;
   console.log("drop");
   if (ev.type === "touchend") {
     var parentdrawflow = document.elementFromPoint(mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY).closest("#drawflow");
@@ -122,15 +127,17 @@ function addNodeToDrawFlow(name, pos_x, pos_y) {
 
   var nodeDiv = `
         <div>
-          <div class="title-box" ondblclick="showSidebar(event)"><i></i>`+ name + `</div>
+          <div class="title-box" ondblclick="showSidebar(event)"><i></i>`+ window.nodeMaps[name].name + '_' + window.nodeMaps[name].count + `</div>
         </div>
       `;
   if (name === 'start')
-    editor.addNode(name, 0, 1, pos_x, pos_y, name, window.nodeMaps[name], nodeDiv);
+    editor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 0, 1, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
   else if (name === 'end')
-    editor.addNode(name, 1, 0, pos_x, pos_y, name, window.nodeMaps[name], nodeDiv);
+    editor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 1, 0, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
   else
-    editor.addNode(name, 1, 1, pos_x, pos_y, name, window.nodeMaps[name], nodeDiv);
+    editor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 1, 1, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
+
+  window.nodeMaps[name].count++;
   // if (name === 'start')
   //   editor.addNode(name, 0, 1, pos_x, pos_y, name, {}, nodeDiv);
   // else if (name === 'end')
@@ -206,18 +213,20 @@ const data = {
   "start": {
     "type": "start",
     "name": "开始",
+
     "description": "工作流开端",
     "input_content": {
       "title": "输入",
       "data": {
-        "input1": ""
+        "input": ""
       }
     },
     "output_content": {
       "title": "输出",
       "data": {
-        "message": "String"
+        "start_output": "String"
       }
+
     }
   },
   "test": {
@@ -249,20 +258,47 @@ const data = {
       }
     }
   },
-  "end": {
-    "type": "end",
-    "name": "结束",
-    "description": "工作流截止",
+  "llm": {
+    "type": "llm",
+    "name": "大模型",
+    "description": "调用工作流",
     "input_content": {
       "title": "输入",
       "data": {
-        "input1": ""
+        "input_content": ""
       }
     },
     "output_content": {
       "title": "输出",
       "data": {
-        "message": "String"
+        "reason": "",
+        "output": ""
+      }
+    }
+  },
+  "intent_identify": {
+    "type": "intent_identify_plus",
+    "name": "意图识别",
+    "description": "根据意图选择对应分支",
+    "input_content": {
+      "title": "输入",
+      "data": {
+        "input_content": ""
+      }
+    },
+    "attempt_match": {
+      "title": "意图匹配",
+      "data": [],
+    }
+  },
+  "end": {
+    "type": "end",
+    "name": "结束",
+    "description": "工作流截止",
+    "output_content": {
+      "title": "输出",
+      "data": {
+
       }
     }
   }
@@ -364,6 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const nodeMaps = {};
   for (const [key, node] of Object.entries(data)) {
     nodeList.appendChild(createNodeItem(node.type, node.name));
+    node["count"] = 1;
     nodeMaps[node.type] = node;
   }
   window.nodeMaps = nodeMaps;
@@ -393,9 +430,9 @@ function showSidebar(event) {
   console.log(event);
   const flowData = editor.export();
   const id = event.target.offsetParent.id.split('-')[1];
-  console.log(flowData.drawflow.Home.data[id].data);
-  const myFlowSetting = new FlowSetting(editor, id, flowData.drawflow.Home.data[id].data, getInputData(flowData, id));
+  console.log(getInputData(flowData, id));
 
+  const myFlowSetting = new FlowSetting(editor, id, flowData.drawflow.Home.data[id].data, getInputData(flowData, id));
   //console.log('showSidebar', event.target.offsetParent.id);
 }
 
@@ -426,11 +463,14 @@ function renderWorklist() {
       document.querySelectorAll('.flow-list-item').forEach(item => {
         item.classList.remove('selected');
       });
+      allowDropSignal = true;
+
       console.log('click', key, value);
       flowItem.classList.add('selected');
       editor.clearModuleSelected();
       editor.import(value.data);
       console.log(editor);
+      editor.editor_mode = "edit";
       workflowContainer.setId(key);
     });
 
@@ -453,15 +493,19 @@ function delFlowListItem(event) {
 // 将flowData转换为符合工作流引擎接口的格式
 function transformFlowData(flowdata) {
 
-  const formedFlowData = { workflow_name: flowdata.name, tasks: {}, connections: [] };
+  const formedFlowData = { workflow_name: flowdata.name, tasks: {}, connections: [], nameMap: {} };
 
   for (const [id, object] of Object.entries(flowdata.data.drawflow.Home.data)) {
+
     formedFlowData.tasks[id] = {
       id: id,
-      name: object.data.name,
+      name: object.name,
       type: object.data.type,
       input_content: object.data.input_content,
     }
+
+    formedFlowData.nameMap[object.name] = id;
+
     if (object.data.attempt_match) {
       formedFlowData.tasks[id].attempt_match = object.data.attempt_match;
     }
@@ -469,12 +513,21 @@ function transformFlowData(flowdata) {
     let index = 0;
     for (const [output_n, obj] of Object.entries(object.outputs)) {
       obj.connections.forEach(connection => {
-        formedFlowData.connections.push({
-          from: id,
-          to: connection.node,
-          branch: index
-        });
+        if (object.data.attempt_match) {
+          formedFlowData.connections.push({
+            from: id,
+            to: connection.node,
+            branch: index
+          });
+        } else {
+          formedFlowData.connections.push({
+            from: id,
+            to: connection.node,
+            branch: -1
+          });
+        }
       });
+
       index++;
     }
 
@@ -485,17 +538,45 @@ function transformFlowData(flowdata) {
 
 function getInputData(flowData, id) {
 
+  const inputData = {};
+  function getInputData(flowData, id, inputData) {
 
-  const inputData = [];
-  for (const [input_n, obj] of Object.entries(flowData.drawflow.Home.data[id].inputs)) {
-    obj.connections.forEach(connection => {
-      nodeId = connection.node;
-      inputData.push(flowData.drawflow.Home.data[nodeId].data.output_content.data);
-
-    });
+    if (flowData.drawflow.Home.data[id].inputs) {
+      for (const [input_n, obj] of Object.entries(flowData.drawflow.Home.data[id].inputs)) {
+        obj.connections.forEach(connection => {
+          nodeId = connection.node;
+          if (flowData.drawflow.Home.data[nodeId].data.output_content) {
+            inputData[flowData.drawflow.Home.data[nodeId].name] = flowData.drawflow.Home.data[nodeId].data.output_content.data;
+          }
+          getInputData(flowData, nodeId, inputData);
+        });
+      }
+    }
   }
-  console.log(inputData);
+  getInputData(flowData, id, inputData);
   return inputData;
 }
 
 
+
+
+//编辑事件
+editor.on('connectionCreated', function (data) {
+  console.log('connectionCreated', data);
+});
+
+editor.on('connectionRemoved', function (data) {
+  console.log('connectionRemoved', data);
+});
+
+editor.on('nodeCreated', function (data) {
+  console.log('nodeCreated', data);
+});
+
+editor.on('nodeRemoved', function (data) {
+  console.log('nodeRemoved', data);
+});
+
+editor.on('nodeDataChanged', function (data) {
+  console.log('nodeDataChanged', data);
+});

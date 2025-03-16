@@ -5,6 +5,7 @@ import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron'
 import path from 'node:path'
 import url from 'url'
 import { writeFile, readFile } from './src/utils/FileOP.mjs'
+import { globalShortcut } from 'electron/main'
 
 
 //import path from 'path'
@@ -95,6 +96,10 @@ const createWindow = () => {
 
     // 打开开发工具
     mainWindow.webContents.openDevTools()
+
+    globalShortcut.register('CmdOrCtrl+shift+I', () => {
+        mainWindow.webContents.openDevTools()
+    })
 }
 
 
@@ -133,8 +138,12 @@ app.whenReady().then(() => {
     app.on('activate', () => {
         // 在 macOS 系统内, 如果没有已开启的应用窗口
         // 点击托盘图标时通常会重新创建一个新窗口
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+
+
     })
+
+
 })
 
 // 除了 macOS 外，当所有窗口都被关闭的时候退出程序。 因此, 通常

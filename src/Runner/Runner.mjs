@@ -1,6 +1,30 @@
 export class Runner {
-    constructor() {
-        this.map = new Map();
+
+    /*
+    map={
+        blockId:[{
+            blockId: "button-1",
+            blockType: "button",
+            eventType: "click",
+            flowId: "flow-1",
+            data:{} //flow setting data
+        },
+        {
+            blockId: "button-1",
+            blockType: "button",
+            eventType: "click",
+            flowId: "flow-1",
+            data:{} //flow setting
+        }
+        ]
+    }
+    */
+    constructor(mapData) {
+        if (!mapData) {
+            this.map = new Map();
+        } else {
+            this.map = new Map(JSON.parse(mapData));
+        }
     }
 
     /*
@@ -169,7 +193,24 @@ export class Runner {
         return null;
     }
 
-    callback(event) {
+    //通过后端接口调用被绑定的工作流，并处理返回值
+    async callback(event) {
         console.log("Runner", event);
+    }
+
+    //调用在加载时应被调用的工作流
+    async initFlow(map) {
+        console.log("initFlow", map);
+        for (let [blockId, events] of map) {
+            for (let event of events) {
+                console.log("initFlow", blockId, event);
+                await this.callback(event);
+            }
+        }
+    }
+
+    save() {
+        //讲map序列化为json
+        return JSON.stringify([...this.map]);
     }
 }

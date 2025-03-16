@@ -14,7 +14,7 @@ function createMenu(data, menuContainer, id, nodeData, key) {
         if (item.children && item.children.length > 0) {
             const toggleIcon = document.createElement('span');
             toggleIcon.className = 'toggle-icon'; // 添加类名
-            toggleIcon.textContent = '>';
+            toggleIcon.textContent = '▶';
             menuItem.appendChild(toggleIcon);
 
             const subMenu = document.createElement('div');
@@ -100,10 +100,10 @@ function transDataToMenuData(data, path, prekey) {
 
 function transInputToMenuData(inputData) {
     var menuData = { name: 'Input', children: [] };
-    for (let i = 0; i < inputData.length; i++) {
+    for (const [key, data] of Object.entries(inputData)) {
         menuData.children.push({
-            name: i,
-            children: transDataToMenuData(inputData[i], [i.toString()], 'data')
+            name: key,
+            children: transDataToMenuData(data, [key], 'data')
         });
     }
 

@@ -147,6 +147,8 @@ class FlowSetting {
             matchList.splice(index, 1);
             block.remove();
             window.parent.DRAPI.emit("update-data", {});
+            this.editor.removeNodeOutput(this.id, "output_" + (index + 1));
+
 
         });
 
@@ -182,6 +184,8 @@ class FlowSetting {
             }
         }
 
+        //this.editor.removeNodeOutput(this.id, "output_1");
+
         addBtn.addEventListener('click', () => {
 
             const inputItem = this.createInputListItem(data, matchList);
@@ -190,6 +194,7 @@ class FlowSetting {
             data.push('');
             window.parent.DRAPI.emit("update-data", {});
             console.log(this.node);
+            this.editor.addNodeOutput(this.id);
 
         });
 
@@ -261,20 +266,21 @@ class FlowSetting {
     }
 
     loadOutput() {
-        //在侧边栏动态展示输出
-        const title = document.getElementById('args-output-title');
-        title.innerText = this.node.output_content.title;
+        if (this.node.output_content) {
+            //在侧边栏动态展示输出
+            const title = document.getElementById('args-output-title');
+            title.innerText = this.node.output_content.title;
 
-        const container = document.getElementById('args-output-container');
-        container.innerHTML = '';
-        for (const [key, value] of Object.entries(this.node.output_content.data)) {
-            if (typeof value === 'object' && value !== null) {
-                container.appendChild(this.createObjectItem(key, value));
-            } else {
-                container.appendChild(this.createOutputDataItem(key, value));
+            const container = document.getElementById('args-output-container');
+            container.innerHTML = '';
+            for (const [key, value] of Object.entries(this.node.output_content.data)) {
+                if (typeof value === 'object' && value !== null) {
+                    container.appendChild(this.createObjectItem(key, value));
+                } else {
+                    container.appendChild(this.createOutputDataItem(key, value));
+                }
             }
         }
-
     }
 
     //更新editor中指定node的data
