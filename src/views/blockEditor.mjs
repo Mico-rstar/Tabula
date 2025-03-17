@@ -65,61 +65,61 @@ let column_tools = {
 
     }
 }
+const tools = {
+    alert: Alert,
+    delimiter: Delimiter,
+    header: { class: Header, inlineToolbar: true },
 
+    embed: Embed,
+    input: Input,
+    checklist: {
+        class: Checklist,
+        inlineToolbar: true,
+    },
+    image: SimpleImage,
+    button: {
+        class: Button,
+
+    },
+    table: Table,
+    Math: {
+        class: EJLaTeX,
+        shortcut: 'CMD+SHIFT+M'
+    },
+    list: {
+        class: EditorjsList,
+        inlineToolbar: true,
+        config: {
+            defaultStyle: 'unordered'
+        },
+    },
+    code: editorjsCodeflask,
+    mark: {
+        class: MarkerTool,
+        shortcut: 'CMD+M',
+    },
+    inlineCode: {
+        class: InlineCode,
+        shortcut: 'CMD+SHIFT+M',
+    },
+    myTune: {
+        class: MyBlockTune
+
+    },
+    columns: {
+        class: editorjsColumns,
+        config: {
+            EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
+            tools: column_tools, // IMPORTANT! ref the column_tools
+            tunes: ['Tune']
+        }
+    }
+
+};
 var editor = new EditorJS({
 
     holder: 'editorjs',
-    tools: {
-        alert: Alert,
-        delimiter: Delimiter,
-        header: { class: Header, inlineToolbar: true },
-
-        embed: Embed,
-        input: Input,
-        checklist: {
-            class: Checklist,
-            inlineToolbar: true,
-        },
-        image: SimpleImage,
-        button: {
-            class: Button,
-
-        },
-        table: Table,
-        Math: {
-            class: EJLaTeX,
-            shortcut: 'CMD+SHIFT+M'
-        },
-        list: {
-            class: EditorjsList,
-            inlineToolbar: true,
-            config: {
-                defaultStyle: 'unordered'
-            },
-        },
-        code: editorjsCodeflask,
-        mark: {
-            class: MarkerTool,
-            shortcut: 'CMD+M',
-        },
-        inlineCode: {
-            class: InlineCode,
-            shortcut: 'CMD+SHIFT+M',
-        },
-        myTune: {
-            class: MyBlockTune
-
-        },
-        columns: {
-            class: editorjsColumns,
-            config: {
-                EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
-                tools: column_tools, // IMPORTANT! ref the column_tools
-                tunes: ['Tune']
-            }
-        }
-
-    },
+    tools: tools,
     tunes: ['myTune'],
 
 });
@@ -184,15 +184,16 @@ window.editor = editor;
 window.controller = controller;
 window.myRunner = myRunner;
 
+
 window.parent.DRAPI.saveFile((dataDir) => {
     console.log('saveFile')
-    editor.clear()
+    const flowData = window.parent.flowMaintainer.save();
+    console.log('flowData:', flowData);
+    const composeData = { "editor": {}, "runner": window.myRunner.save(), "flowEditor": flowData.flowEditor, "flowContainer": flowData.flowContainer };
+    console.log('composeData:', composeData);
     editor.save().then((outputData) => {
-        console.log
-            ('文章数据：', outputData);
-        //writeFile(dataDir, JSON.stringify(outputData))
-
-        window.parent.DRAPI.write(dataDir, JSON.stringify(outputData)).then(() => {
+        composeData.editor = outputData;
+        window.parent.DRAPI.write(dataDir, JSON.stringify(composeData)).then(() => {
             console.log('File written successfully.');
         }).catch((error) => {
             console.log('写入文件失败：', error);
@@ -205,64 +206,27 @@ window.parent.DRAPI.saveFile((dataDir) => {
 )
 
 window.parent.DRAPI.recoverFile((dataDir) => {
-    window.parent.DRAPI.read(dataDir).then((outputData) => {
-        console.log('读取文件成功：', outputData);
-        const data = JSON.parse(outputData);
-        console.log(data);
+    window.parent.DRAPI.read(dataDir).then((composeData) => {
+        const data = JSON.parse(composeData);
 
         editor.destroy()
+        console.log(data);
         // 在这里处理读取到的数据
         editor = new EditorJS({
 
             holder: 'editorjs',
-            tools: {
-                header: { class: Header, inlineToolbar: true },
 
-                embed: Embed,
-                input: Input,
-                checklist: {
-                    class: Checklist,
-                    inlineToolbar: true,
-                },
-                image: SimpleImage,
-                button: {
-                    class: Button,
-
-                },
-                list: {
-                    class: EditorjsList,
-                    inlineToolbar: true,
-                    config: {
-                        defaultStyle: 'unordered'
-                    },
-                },
-                code: editorjsCodeflask,
-                mark: {
-                    class: MarkerTool,
-                    shortcut: 'CMD+M',
-                },
-                inlineCode: {
-                    class: InlineCode,
-                    shortcut: 'CMD+SHIFT+M',
-                },
-                myTune: {
-                    class: MyBlockTune
-
-                },
-                columns: {
-                    class: editorjsColumns,
-                    config: {
-                        EditorJsLibrary: EditorJS, // Pass the library instance to the columns instance.
-                        tools: column_tools // IMPORTANT! ref the column_tools
-                    }
-                }
-
-            },
+            holder: 'editorjs',
+            tools: tools,
             tunes: ['myTune'],
-            data: data
+            data: data.editor
 
 
         })
+        window.editor = editor;
+        window.parent.flowMaintainer.recover(data.flowEditor, data.flowContainer);
+        window.myRunner.recover(data.runner);
+
     }).catch((error) => {
         console.log('读取文件失败：', error);
     });
@@ -280,41 +244,9 @@ window.parent.DRAPI.openFile((dataDir) => {
         editor = new EditorJS({
 
             holder: 'editorjs',
-            tools: {
-                header: { class: Header, inlineToolbar: true },
-
-                embed: Embed,
-                input: Input,
-                checklist: {
-                    class: Checklist,
-                    inlineToolbar: true,
-                },
-                image: SimpleImage,
-                button: {
-                    class: Button,
-                    data: {}
-                },
-                list: {
-                    class: EditorjsList,
-                    inlineToolbar: true,
-                    config: {
-                        defaultStyle: 'unordered'
-                    },
-                },
-                code: CodeTool,
-                mark: {
-                    class: MarkerTool,
-                    shortcut: 'CMD+M',
-                },
-                inlineCode: {
-                    class: InlineCode,
-                    shortcut: 'CMD+SHIFT+M',
-                },
-                myTune: MyBlockTune,
-
-            },
+            tools: tools,
             tunes: ['myTune'],
-            data: data
+            data: data.editor
 
 
         })

@@ -26,6 +26,9 @@ contextBridge.exposeInMainWorld('DRAPI', {
     emit: (event, data) => {
         emitter.emit(event, data);
     },
+    removeAllListeners: (event) => {
+        emitter.removeAllListeners(event);
+    },
     Drawflow: Drawflow
 });
 

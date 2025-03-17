@@ -196,7 +196,7 @@ class BlockSetting {
     }
 
     initFlowContent() {
-
+        console.log(window.myRunner);
         if (window.myRunner.map.has(this.id)) {
             window.myRunner.map.get(this.id).forEach((value, index) => {
                 this.loadFlowContent(value.eventType, value.flowId, this.id + "." + index);

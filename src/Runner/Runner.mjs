@@ -19,12 +19,8 @@ export class Runner {
         ]
     }
     */
-    constructor(mapData) {
-        if (!mapData) {
-            this.map = new Map();
-        } else {
-            this.map = new Map(JSON.parse(mapData));
-        }
+    constructor() {
+        this.map = new Map();
     }
 
     /*
@@ -211,6 +207,11 @@ export class Runner {
 
     save() {
         //讲map序列化为json
-        return JSON.stringify([...this.map]);
+
+        return Object.fromEntries(this.map);
+    }
+
+    recover(map) {
+        this.map = new Map(Object.entries(map));
     }
 }

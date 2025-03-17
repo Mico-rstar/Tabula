@@ -1,10 +1,10 @@
 
-//控制是否允许创建节点
-var allowDropSignal = false;
+
 
 var id = document.getElementById("drawflow");
-var editor = new Drawflow(id);
-editor.reroute = true;
+var flowEditor = new Drawflow(id);
+
+flowEditor.reroute = true;
 
 
 const dataToImport = {
@@ -16,17 +16,20 @@ const dataToImport = {
 }
 
 
-editor.start();
-editor.import(dataToImport);
+flowEditor.start();
+flowEditor.import(dataToImport);
+flowEditor.clearModuleSelected()
 
-editor.clearModuleSelected()
-
-editor.editor_mode = "view";
+//控制是否允许创建节点
+var allowDropSignal = false;
+flowEditor.editor_mode = "view";
 
 
 class Maintainer {
-  constructor() {
-    this.container = {};
+  constructor(container) {
+    if (container)
+      this.container = container;
+    else this.container = {};
     this.id = 0;
   }
 
@@ -46,17 +49,27 @@ class Maintainer {
     return this.id;
   }
 
+  recover(container) {
+    this.container = container;
+  }
+
   setId(id) {
     this.id = id;
+  }
+
+  save() {
+    return this.container;
   }
 
 
 }
 const workflowContainer = new Maintainer();
 
+window.parent.flowMaintainer = new FlowMaintainer(flowEditor, workflowContainer);
+
 //save data
 document.getElementsByClassName("btn-save")[0].addEventListener("click", function () {
-  const flowData = editor.export();
+  const flowData = flowEditor.export();
   console.log(flowData);
   console.log(workflowContainer.get()[workflowContainer.getId()]);
   workflowContainer.get()[workflowContainer.getId()].data = flowData;
@@ -117,11 +130,11 @@ function drop(ev) {
 }
 
 function addNodeToDrawFlow(name, pos_x, pos_y) {
-  if (editor.editor_mode === 'fixed') {
+  if (flowEditor.editor_mode === 'fixed') {
     return false;
   }
-  pos_x = pos_x * (editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)) - (editor.precanvas.getBoundingClientRect().x * (editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)));
-  pos_y = pos_y * (editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)) - (editor.precanvas.getBoundingClientRect().y * (editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)));
+  pos_x = pos_x * (flowEditor.precanvas.clientWidth / (flowEditor.precanvas.clientWidth * flowEditor.zoom)) - (flowEditor.precanvas.getBoundingClientRect().x * (flowEditor.precanvas.clientWidth / (flowEditor.precanvas.clientWidth * flowEditor.zoom)));
+  pos_y = pos_y * (flowEditor.precanvas.clientHeight / (flowEditor.precanvas.clientHeight * flowEditor.zoom)) - (flowEditor.precanvas.getBoundingClientRect().y * (flowEditor.precanvas.clientHeight / (flowEditor.precanvas.clientHeight * flowEditor.zoom)));
 
 
 
@@ -131,19 +144,19 @@ function addNodeToDrawFlow(name, pos_x, pos_y) {
         </div>
       `;
   if (name === 'start')
-    editor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 0, 1, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
+    flowEditor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 0, 1, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
   else if (name === 'end')
-    editor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 1, 0, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
+    flowEditor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 1, 0, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
   else
-    editor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 1, 1, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
+    flowEditor.addNode(window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, 1, 1, pos_x, pos_y, window.nodeMaps[name].name + '_' + window.nodeMaps[name].count, window.nodeMaps[name], nodeDiv);
 
   window.nodeMaps[name].count++;
   // if (name === 'start')
-  //   editor.addNode(name, 0, 1, pos_x, pos_y, name, {}, nodeDiv);
+  //   flowEditor.addNode(name, 0, 1, pos_x, pos_y, name, {}, nodeDiv);
   // else if (name === 'end')
-  //   editor.addNode(name, 1, 0, pos_x, pos_y, name, {}, nodeDiv);
+  //   flowEditor.addNode(name, 1, 0, pos_x, pos_y, name, {}, nodeDiv);
   // else
-  //   editor.addNode(name, 1, 1, pos_x, pos_y, name, {}, nodeDiv);
+  //   flowEditor.addNode(name, 1, 1, pos_x, pos_y, name, {}, nodeDiv);
 
   document.querySelectorAll('.outputs').forEach(output => {
     output.addEventListener('mousedown', () => {
@@ -160,15 +173,15 @@ function showpopup(e) {
   //document.getElementById("modalfix").style.display = "block";
 
   //e.target.children[0].style.transform = 'translate('+translate.x+'px, '+translate.y+'px)';
-  transform = editor.precanvas.style.transform;
-  editor.precanvas.style.transform = '';
-  editor.precanvas.style.left = editor.canvas_x + 'px';
-  editor.precanvas.style.top = editor.canvas_y + 'px';
+  transform = flowEditor.precanvas.style.transform;
+  flowEditor.precanvas.style.transform = '';
+  flowEditor.precanvas.style.left = flowEditor.canvas_x + 'px';
+  flowEditor.precanvas.style.top = flowEditor.canvas_y + 'px';
   console.log(transform);
 
-  //e.target.children[0].style.top  =  -editor.canvas_y - editor.container.offsetTop +'px';
-  //e.target.children[0].style.left  =  -editor.canvas_x  - editor.container.offsetLeft +'px';
-  editor.editor_mode = "fixed";
+  //e.target.children[0].style.top  =  -flowEditor.canvas_y - flowEditor.container.offsetTop +'px';
+  //e.target.children[0].style.left  =  -flowEditor.canvas_x  - flowEditor.container.offsetLeft +'px';
+  flowEditor.editor_mode = "fixed";
 
 }
 
@@ -176,10 +189,10 @@ function closemodal(e) {
   e.target.closest(".drawflow-node").style.zIndex = "2";
   e.target.parentElement.parentElement.style.display = "none";
   //document.getElementById("modalfix").style.display = "none";
-  editor.precanvas.style.transform = transform;
-  editor.precanvas.style.left = '0px';
-  editor.precanvas.style.top = '0px';
-  editor.editor_mode = "edit";
+  flowEditor.precanvas.style.transform = transform;
+  flowEditor.precanvas.style.left = '0px';
+  flowEditor.precanvas.style.top = '0px';
+  flowEditor.editor_mode = "edit";
 }
 
 function changeModule(event) {
@@ -218,13 +231,15 @@ const data = {
     "input_content": {
       "title": "输入",
       "data": {
-        "input": ""
       }
+    },
+    "start_input": {
+      "title": "自定义入参",
+      "data": ["output"]
     },
     "output_content": {
       "title": "输出",
       "data": {
-        "start_output": "String"
       }
 
     }
@@ -263,7 +278,7 @@ const data = {
     "name": "大模型",
     "description": "调用工作流",
     "input_content": {
-      "title": "输入",
+      "title": "输出",
       "data": {
         "input_content": ""
       }
@@ -271,8 +286,6 @@ const data = {
     "output_content": {
       "title": "输出",
       "data": {
-        "reason": "",
-        "output": ""
       }
     }
   },
@@ -288,17 +301,23 @@ const data = {
     },
     "attempt_match": {
       "title": "意图匹配",
-      "data": [],
+      "data": []
     }
   },
   "end": {
     "type": "end",
     "name": "结束",
     "description": "工作流截止",
+    "input_content": {
+      "title": "输入",
+      "data": {
+
+      }
+    },
     "output_content": {
       "title": "输出",
       "data": {
-
+        "output_content": ""
       }
     }
   }
@@ -428,11 +447,11 @@ function showSidebar(event) {
   const sidebar = document.getElementById('sidebar');
   sidebar.style.right = '0';
   console.log(event);
-  const flowData = editor.export();
+  const flowData = flowEditor.export();
   const id = event.target.offsetParent.id.split('-')[1];
   console.log(getInputData(flowData, id));
 
-  const myFlowSetting = new FlowSetting(editor, id, flowData.drawflow.Home.data[id].data, getInputData(flowData, id));
+  const myFlowSetting = new FlowSetting(flowEditor, id, flowData.drawflow.Home.data[id].data, getInputData(flowData, id));
   //console.log('showSidebar', event.target.offsetParent.id);
 }
 
@@ -448,6 +467,9 @@ function hideSidebar() {
 
 // }
 
+window.parent.DRAPI.addEventListener("recover-flow-list", () => {
+  renderWorklist();
+})
 
 function renderWorklist() {
   const flowList = document.getElementById('flow-list-content');
@@ -467,10 +489,10 @@ function renderWorklist() {
 
       console.log('click', key, value);
       flowItem.classList.add('selected');
-      editor.clearModuleSelected();
-      editor.import(value.data);
-      console.log(editor);
-      editor.editor_mode = "edit";
+      flowEditor.clearModuleSelected();
+      flowEditor.import(value.data);
+      console.log(flowEditor);
+      flowEditor.editor_mode = "edit";
       workflowContainer.setId(key);
     });
 
@@ -502,6 +524,7 @@ function transformFlowData(flowdata) {
       name: object.name,
       type: object.data.type,
       input_content: object.data.input_content,
+      output_content: object.data.output_content
     }
 
     formedFlowData.nameMap[object.name] = id;
@@ -561,22 +584,22 @@ function getInputData(flowData, id) {
 
 
 //编辑事件
-editor.on('connectionCreated', function (data) {
+flowEditor.on('connectionCreated', function (data) {
   console.log('connectionCreated', data);
 });
 
-editor.on('connectionRemoved', function (data) {
+flowEditor.on('connectionRemoved', function (data) {
   console.log('connectionRemoved', data);
 });
 
-editor.on('nodeCreated', function (data) {
+flowEditor.on('nodeCreated', function (data) {
   console.log('nodeCreated', data);
 });
 
-editor.on('nodeRemoved', function (data) {
+flowEditor.on('nodeRemoved', function (data) {
   console.log('nodeRemoved', data);
 });
 
-editor.on('nodeDataChanged', function (data) {
+flowEditor.on('nodeDataChanged', function (data) {
   console.log('nodeDataChanged', data);
 });

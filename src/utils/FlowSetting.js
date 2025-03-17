@@ -17,12 +17,15 @@ class FlowSetting {
             this.argsInputDiv.appendChild(this.createInputDataBlock(this.node.input_content.title, this.node.input_content.data));
         }
         if (this.node.attempt_match) {
-            this.argsInputDiv.appendChild(this.createInputDataBlock(this.node.attempt_match.title, this.node.attempt_match.data));
+            this.argsInputDiv.appendChild(this.createInputDataBlock(this.node.attempt_match.title, this.node.attempt_match.data, true));
+        }
+        if (this.node.start_input) {
+            this.argsInputDiv.appendChild(this.createInputDataBlock(this.node.start_input.title, this.node.start_input.data));
         }
     }
 
 
-    createInputDataBlock(title, data) {
+    createInputDataBlock(title, data, changeOutput = false) {
         const block = document.createElement('div');
         block.className = 'args-input-block';
 
@@ -35,7 +38,7 @@ class FlowSetting {
 
 
         if (Array.isArray(data)) {
-            inputContent.appendChild(this.createInputList(data));
+            inputContent.appendChild(this.createInputList(data, changeOutput));
 
         } else {
             for (const [key, value] of Object.entries(data)) {
@@ -124,14 +127,14 @@ class FlowSetting {
 
 
 
-    createInputListItem(data, matchList, i) {
+    createInputListItem(data, matchList, i, changeOutput = false) {
         console.log(matchList);
 
         const block = document.createElement('span');
 
         const input = document.createElement('input');
         input.className = 'args-input-list-item';
-        input.placeholder = '{value}表示变量';
+        input.placeholder = '请输入参数';
         input.style.width = '90%';
         input.style.height = '30px';
         if (data[i])
@@ -147,7 +150,8 @@ class FlowSetting {
             matchList.splice(index, 1);
             block.remove();
             window.parent.DRAPI.emit("update-data", {});
-            this.editor.removeNodeOutput(this.id, "output_" + (index + 1));
+            if (changeOutput)
+                this.editor.removeNodeOutput(this.id, "output_" + (index + 1));
 
 
         });
@@ -164,7 +168,7 @@ class FlowSetting {
         block.appendChild(removeBtn);
         return block;
     }
-    createInputList(data) {
+    createInputList(data, changeOutput = false) {
         const block = document.createElement('div');
         const addBtn = document.createElement('div');
         addBtn.className = 'args-input-list-add';
@@ -178,7 +182,7 @@ class FlowSetting {
         //加载data原有数据
         if (data && data.length > 0) {
             for (let i = 0; i < data.length; i++) {
-                const inputItem = this.createInputListItem(data, matchList, i);
+                const inputItem = this.createInputListItem(data, matchList, i, changeOutput);
                 block.appendChild(inputItem);
                 matchList.push(inputItem);
             }
@@ -188,13 +192,14 @@ class FlowSetting {
 
         addBtn.addEventListener('click', () => {
 
-            const inputItem = this.createInputListItem(data, matchList);
+            const inputItem = this.createInputListItem(data, matchList, changeOutput);
             block.appendChild(inputItem);
             matchList.push(inputItem);
             data.push('');
             window.parent.DRAPI.emit("update-data", {});
             console.log(this.node);
-            this.editor.addNodeOutput(this.id);
+            if (changeOutput)
+                this.editor.addNodeOutput(this.id);
 
         });
 
@@ -286,6 +291,14 @@ class FlowSetting {
     //更新editor中指定node的data
     updateEditorData() {
         window.parent.DRAPI.addEventListener("update-data", () => {
+
+            if (this.node.type === "start") {
+                this.node.output_content.data = {};
+                this.node.start_input.data.forEach((element) => {
+                    this.node.output_content.data[element] = "String";
+                });
+            }
+            console.log(this.id, this.node);
             this.editor.updateNodeDataFromId(this.id, this.node);
         });
 
@@ -293,8 +306,10 @@ class FlowSetting {
 
     init() {
         //显示节点名称
+        window.parent.DRAPI.removeAllListeners("update-data");
         this.flowName.innerText = this.node.name;
         this.updateEditorData();
+        window.parent.DRAPI.emit("update-data", {});
         this.loadInput();
         this.loadOutput();
     }

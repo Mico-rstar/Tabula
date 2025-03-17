@@ -21,6 +21,7 @@
     <!--内部依赖-->
     <script src="../utils/FlowSetting.js"></script>
     <script src="../utils/Menu.js"></script>
+    <script src="../utils/FlowMaintainer.js"></script>
 
 
 
@@ -94,23 +95,23 @@
         <div class="col-right">
             <div class="menu">
                 <ul>
-                    <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
+                    <li onclick="flowEditor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
 
                 </ul>
             </div>
             <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
 
-                <div class="btn-save">Save</div>
-                <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
+                <div class="btn-save">Submit</div>
+                <div class="btn-clear" onclick="flowEditor.clearModuleSelected()">Clear</div>
                 <div class="btn-lock">
-                    <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
-                    <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');"
-                        style="display:none;"></i>
+                    <i id="lock" class="fas fa-lock" onclick="flowEditor.editor_mode='fixed'; changeMode('lock');"></i>
+                    <i id="unlock" class="fas fa-lock-open"
+                        onclick="flowEditor.editor_mode='edit'; changeMode('unlock');" style="display:none;"></i>
                 </div>
                 <div class="bar-zoom">
-                    <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
-                    <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
-                    <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+                    <i class="fas fa-search-minus" onclick="flowEditor.zoom_out()"></i>
+                    <i class="fas fa-search" onclick="flowEditor.zoom_reset()"></i>
+                    <i class="fas fa-search-plus" onclick="flowEditor.zoom_in()"></i>
                 </div>
             </div>
         </div>
