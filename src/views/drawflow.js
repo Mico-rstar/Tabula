@@ -51,10 +51,29 @@ class Maintainer {
 
   recover(container) {
     this.container = container;
+
+    for (const [id, flowData] of Object.entries(workflowContainer.get())) {
+      //将flowData转化为工作流引擎接口接收的格式
+      flowData.workflow_id = id;
+      const newFlowData = transformFlowData(flowData);
+      console.log(newFlowData);
+
+      //发送给服务端
+      window.parent.ws.sendMsg({ type: "submitWorkflow", data: newFlowData }).then((res) => {
+        console.log(res);
+        if (res.data.status == 1) console.log("success");
+        else console.log("submit error", res.data.err_msg);
+      })
+    }
   }
 
+  //表示当前用户打开的工作流
   setId(id) {
     this.id = id;
+  }
+
+  setFlowId(flowId) {
+    this.container[this.id].workflow_id = flowId;
   }
 
   save() {
@@ -73,10 +92,18 @@ document.getElementsByClassName("btn-save")[0].addEventListener("click", functio
   console.log(flowData);
   console.log(workflowContainer.get()[workflowContainer.getId()]);
   workflowContainer.get()[workflowContainer.getId()].data = flowData;
+  //将客户端id加入到发给后端的数据中
+  workflowContainer.setFlowId(workflowContainer.getId());
 
   //将flowData转化为工作流引擎接口接收的格式
   const newFlowData = transformFlowData(workflowContainer.get()[workflowContainer.getId()]);
   console.log(newFlowData);
+
+  //发送给服务端
+  window.parent.ws.sendMsg({ type: "submitWorkflow", data: newFlowData }).then((res) => {
+    if (res.data.status == 1) console.log("success");
+    else console.log("submit error", res.data.err_msg);
+  })
 
 });
 
@@ -222,112 +249,112 @@ function changeMode(option) {
 
 
 
-const data = {
-  "start": {
-    "type": "start",
-    "name": "开始",
+// const data = {
+//   "start": {
+//     "type": "start",
+//     "name": "开始",
 
-    "description": "工作流开端",
-    "input_content": {
-      "title": "输入",
-      "data": {
-      }
-    },
-    "start_input": {
-      "title": "自定义入参",
-      "data": ["output"]
-    },
-    "output_content": {
-      "title": "输出",
-      "data": {
-      }
+//     "description": "工作流开端",
+//     "input_content": {
+//       "title": "输入",
+//       "data": {
+//       }
+//     },
+//     "start_input": {
+//       "title": "自定义入参",
+//       "data": ["output"]
+//     },
+//     "output_content": {
+//       "title": "输出",
+//       "data": {
+//       }
 
-    }
-  },
-  "test": {
-    "type": "test",
-    "name": "测试",
-    "description": "测试节点",
-    "input_content": {
-      "title": "输入",
-      "data": {
-        "input1": "",
-        "input2": ""
-      }
-    },
-    "attempt_match": {
-      "title": "意图匹配",
-      "data": []
-    },
-    "output_content": {
-      "title": "输出",
-      "data": {
-        "message": "String",
-        "data": {
-          "content": "String",
-          "title": {
-            "content": "String",
-            "check": "Boolean"
-          }
-        }
-      }
-    }
-  },
-  "llm": {
-    "type": "llm",
-    "name": "大模型",
-    "description": "调用工作流",
-    "input_content": {
-      "title": "输出",
-      "data": {
-        "input_content": ""
-      }
-    },
-    "output_content": {
-      "title": "输出",
-      "data": {
-      }
-    }
-  },
-  "intent_identify": {
-    "type": "intent_identify_plus",
-    "name": "意图识别",
-    "description": "根据意图选择对应分支",
-    "input_content": {
-      "title": "输入",
-      "data": {
-        "input_content": ""
-      }
-    },
-    "attempt_match": {
-      "title": "意图匹配",
-      "data": []
-    }
-  },
-  "end": {
-    "type": "end",
-    "name": "结束",
-    "description": "工作流截止",
-    "input_content": {
-      "title": "输入",
-      "data": {
+//     }
+//   },
+//   "test": {
+//     "type": "test",
+//     "name": "测试",
+//     "description": "测试节点",
+//     "input_content": {
+//       "title": "输入",
+//       "data": {
+//         "input1": "",
+//         "input2": ""
+//       }
+//     },
+//     "attempt_match": {
+//       "title": "意图匹配",
+//       "data": []
+//     },
+//     "output_content": {
+//       "title": "输出",
+//       "data": {
+//         "message": "String",
+//         "data": {
+//           "content": "String",
+//           "title": {
+//             "content": "String",
+//             "check": "Boolean"
+//           }
+//         }
+//       }
+//     }
+//   },
+//   "llm": {
+//     "type": "llm",
+//     "name": "大模型",
+//     "description": "调用工作流",
+//     "input_content": {
+//       "title": "输出",
+//       "data": {
+//         "input_content": ""
+//       }
+//     },
+//     "output_content": {
+//       "title": "输出",
+//       "data": {
+//       }
+//     }
+//   },
+//   "intent_identify": {
+//     "type": "intent_identify_plus",
+//     "name": "意图识别",
+//     "description": "根据意图选择对应分支",
+//     "input_content": {
+//       "title": "输入",
+//       "data": {
+//         "input_content": ""
+//       }
+//     },
+//     "attempt_match": {
+//       "title": "意图匹配",
+//       "data": []
+//     }
+//   },
+//   "end": {
+//     "type": "end",
+//     "name": "结束",
+//     "description": "工作流截止",
+//     "input_content": {
+//       "title": "输入",
+//       "data": {
 
-      }
-    },
-    "output_content": {
-      "title": "输出",
-      "data": {
-        "output_content": ""
-      }
-    }
-  }
-}
+//       }
+//     },
+//     "output_content": {
+//       "title": "输出",
+//       "data": {
+//         "output_content": ""
+//       }
+//     }
+//   }
+// }
+
+
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
-
-
-
 
   //为flowlist添加动态事件
   const flowExpandBtn = document.getElementById('flow-expand-btn');
@@ -400,8 +427,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  //动态添加节点
-  const nodeList = document.getElementById("node-list");
 
   /*
   window.ws.sendMsg({ "type": "getNodes", "data": {} }).then(
@@ -416,14 +441,24 @@ document.addEventListener('DOMContentLoaded', function () {
   );
   */
 
-  const nodeMaps = {};
-  for (const [key, node] of Object.entries(data)) {
-    nodeList.appendChild(createNodeItem(node.type, node.name));
-    node["count"] = 1;
-    nodeMaps[node.type] = node;
-  }
-  window.nodeMaps = nodeMaps;
+});
 
+//加载节点数据
+const nodeList = document.getElementById("node-list");
+window.parent.DRAPI.addEventListener("add-node", (data) => {
+  console.log(window.parent);
+  window.parent.ws.sendMsg({ type: 'getNodes' }).then((data) => {
+    console.log('节点数据: ', data.data);
+
+    const nodeMaps = {};
+    for (const [key, node] of Object.entries(data.data)) {
+      nodeList.appendChild(createNodeItem(node.type, node.name));
+      node["count"] = 1;
+      nodeMaps[node.type] = node;
+    }
+    window.nodeMaps = nodeMaps;
+    window.parent.DRAPI.removeAllListeners('add-node');
+  })
 });
 
 
@@ -515,7 +550,7 @@ function delFlowListItem(event) {
 // 将flowData转换为符合工作流引擎接口的格式
 function transformFlowData(flowdata) {
 
-  const formedFlowData = { workflow_name: flowdata.name, tasks: {}, connections: [], nameMap: {} };
+  const formedFlowData = { workflow_name: flowdata.name, tasks: {}, connections: [], nameMap: {}, id: flowdata.workflow_id };
 
   for (const [id, object] of Object.entries(flowdata.data.drawflow.Home.data)) {
 
@@ -524,7 +559,8 @@ function transformFlowData(flowdata) {
       name: object.name,
       type: object.data.type,
       input_content: object.data.input_content,
-      output_content: object.data.output_content
+      output_content: object.data.output_content,
+
     }
 
     formedFlowData.nameMap[object.name] = id;

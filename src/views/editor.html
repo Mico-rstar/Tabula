@@ -26,6 +26,11 @@
 
     <script src="../depc/table.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+    <script>
+        autosize(document.querySelector('#args-input'));
+    </script>
+
 
     <div class="view">
         <div id="content">
@@ -79,9 +84,25 @@
                     </div>
                     <div class="form-group">
                         <label for="input">入参配置</label>
-                        <input type="text" id="args-input" name="input" placeholder="{value}表示变量"></input>
-                        <div id="menu"></div>
+                        <span class="args-input-item">
+                            <label class="args-input-key">input</label>
+                            <textarea type="text" id="args-input" name="input" placeholder="{value}表示变量"></textarea>
+                        </span>
 
+                        <div id="menu"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="block_index">插入块位置</label>
+                        <div id="block-select-list">
+                            <select id="block_index" class="block_index_select" name="block_index">
+                                <option value="请选择">请选择</option>
+                                <!-- 可以根据需要添加更多选项 -->
+                            </select>
+                            <select id="block_index" class="block_index_select" name="block_index">
+                                <option value="请选择">请选择</option>
+                                <!-- 可以根据需要添加更多选项 -->
+                            </select>
+                        </div>
                     </div>
                     <div class="buttons">
                         <button class="primary">确定</button>

@@ -3,9 +3,13 @@ import { sendMsgWithRes } from "./sender.mjs";
 
 
 class MySocket {
+
     constructor(url) {
         this.ws = new WebSocket(url);
         this.init();
+
+
+
     }
 
     init() {
@@ -13,10 +17,12 @@ class MySocket {
             console.log('websocket已连接', this.ws);
             window.parent.DRAPI.emit("socket-open", {});
         };
-        this.ws.onmessage = function (event) {
+        this.ws.onmessage = async function (event) {
             try {
                 const data = JSON.parse(event.data);
-                messageHandlers[data.type](data, this.ws);
+                console.log(this);
+                //this上下文切换为WebSocket
+                await messageHandlers[data.type](data, this);
             } catch (e) { console.log("parse-serverinfo-err", e) }
         };
         this.ws.onclose = function (event) {
@@ -42,7 +48,8 @@ class MySocket {
     }
 
 
-}
+
+};
 
 export {
     MySocket as default

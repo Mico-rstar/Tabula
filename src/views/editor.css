@@ -210,7 +210,6 @@ body {
 
 .input-block-div {
     width: 100%;
-    height: 38px;
     display: flex;
     align-items: center;
 }
@@ -239,4 +238,23 @@ body {
 
 .workflow-item-content-flowname {
     font-size: 13px;
+}
+
+
+.args-input-item {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.args-input-list-item {
+    margin-bottom: 10px;
+}
+
+.args-input-key {
+    margin-right: 20px;
+}
+
+.block_index_select {
+    margin-top: 10px;
 }

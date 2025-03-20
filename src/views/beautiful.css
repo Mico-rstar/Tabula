@@ -481,6 +481,7 @@ header a {
     border: #0e5ba3;
     border-width: 1px;
     border-style: solid;
+    overflow: auto;
 }
 
 #create-workflow {

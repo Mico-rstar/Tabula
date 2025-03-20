@@ -1,3 +1,4 @@
+
 class BlockSetting {
 
 
@@ -98,17 +99,29 @@ class BlockSetting {
             workflowList.style.display = 'block';
             this.primaryBtn = this.replaceElement(this.primaryBtn);
             this.cancelBtn = this.replaceElement(this.cancelBtn);
-            this.primaryBtn.addEventListener('click', () => {
+            this.primaryBtn.addEventListener('click', async () => {
                 const eventType = document.getElementById('eventType').value;
                 const action = document.getElementById('action').value;
 
                 console.log(window);
 
+                const paramsInput = document.getElementById('args-input');
+                let params = paramsInput.value;
+                params = await this.translateResourceUrl(params);
+
+                const insertBlockId = {};
+                const blockIdSelectDiv = document.getElementById('block-select-list');
+                blockIdSelectDiv.querySelectorAll('select').forEach(select => {
+                    insertBlockId[select.getAttribute("node-id")] = select.value;
+                });
+
                 let bindId = window.myRunner.bind({
                     "eventType": eventType,
                     "flowId": action,
                     "blockId": this.id,
-                    "blockType": this.blockType
+                    "blockType": this.blockType,
+                    "params": params,
+                    "insertBlockId": insertBlockId
                 }, window.controller, window.editor)
                 //添加工作流
                 this.loadFlowContent(eventType, action, bindId);
@@ -126,6 +139,46 @@ class BlockSetting {
         })
     }
 
+    //翻译资源地址
+    async translateResourceUrl(params) {
+        // 提取所有 URL
+        const urlPattern = /\{([^}]+)\}/g;
+        let match;
+        const urls = [];
+        while ((match = urlPattern.exec(params)) !== null) {
+            urls.push(match[1]);
+        }
+        console.log(urls);
+
+        // 转换每个 URL
+        for (const url of urls) {
+
+            let translatedUrl;
+            let urllist = url.split('.');
+            //正则匹配blocks[\d],获取blocks的索引
+            if (urllist[0].match(/block\[\d+\]/)) {
+                //获取blocks的索引
+
+                const index = parseInt(urllist[0].match(/block\[(\d+)\]/)[1]);
+                const id = await this.getBlockIDByIndex(index, window.editor);
+
+                urllist[0] = id;
+                translatedUrl = urllist.join('.');
+            }
+
+
+            if (translatedUrl) {
+                params = params.replace(`{${url}}`, `{${translatedUrl}}`);
+            }
+
+
+        }
+        return params;
+
+
+
+
+    }
 
 
     setBlockName() {
@@ -140,6 +193,73 @@ class BlockSetting {
             option.text = event.name;
             this.eventTypeSelect.appendChild(option);
         }
+    }
+
+    fillActions() {
+        this.actionSelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.value = "";
+        option.text = "请选择工作流";
+        this.actionSelect.appendChild(option);
+        window.parent.ws.sendMsg({ type: "getWorkflows" }).then((actions) => {
+            for (const [id, obj] of Object.entries(actions.data)) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.text = obj.workflow_name;
+                this.actionSelect.appendChild(option);
+            }
+            this.actionSelect.addEventListener('change', async () => {
+                await this.createBlockSelect(actions.data[this.actionSelect.value]);
+            });
+
+        })
+        /*
+        for (const event of EventType) {
+            const option = document.createElement('option');
+            option.value = event.type;
+            option.text = event.name;
+            this.eventTypeSelect.appendChild(option);
+        }
+            */
+    }
+
+    //创建块选择下拉框
+    async createBlockSelect(data) {
+        const blockSelectDiv = document.getElementById("block-select-list");
+        const blockMaps = await this.buildIdIndexMap(window.editor);
+        console.log('idIndexMap:', blockMaps);
+        blockSelectDiv.innerHTML = '';
+        console.log(data);
+
+        for (const [id, obj] of Object.entries(data.tasks)) {
+
+            if (obj.type == 'insert_paragraph') {
+                const blockSelect = document.createElement('select');
+                blockSelect.id = "block-select";
+                blockSelect.className = "block_index_select";
+                blockSelect.setAttribute("node-id", id)
+                this.fillBlockSelect(blockSelect, blockMaps, obj.name);
+                blockSelectDiv.appendChild(blockSelect);
+            }
+
+        }
+
+
+    }
+
+    fillBlockSelect(blockSelect, blockMaps, blockSelectName) {
+        blockSelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.value = "";
+        option.text = "为块操作绑定id：" + blockSelectName;
+        blockSelect.appendChild(option);
+        for (const [id, index] of Object.entries(blockMaps)) {
+            const option = document.createElement('option');
+            option.value = id;
+            option.text = "block" + index;
+            blockSelect.appendChild(option);
+        }
+
     }
 
     setEventType() {
@@ -204,7 +324,42 @@ class BlockSetting {
         }
     }
 
+
+
+    async getBlockIDByIndex(index, editor) {
+
+        return new Promise((resolve, reject) => {
+            // 获取所有块的ID
+            editor.save().then((output) => {
+                resolve(output.blocks[index].id)
+            });
+        })
+
+
+    }
+
+    //建立id与index映射
+    async buildIdIndexMap(editor) {
+        return new Promise((resolve, reject) => {
+            const idIndexMap = {};
+            editor.save().then((outputData) => {
+
+                for (let i = 0; i < outputData.blocks.length; i++) {
+                    const block = outputData.blocks[i];
+                    // 将id与index映射保存到全局变量中
+                    idIndexMap[block.id] = i;
+                    resolve(idIndexMap);
+                }
+            }).catch((error) => {
+                reject(idIndexMap)
+            });
+        });
+
+    }
+
     async init() {
+        this.fillActions();
+
         this.clearFlowContent();
         this.initFlowContent();
         this.switchOption();

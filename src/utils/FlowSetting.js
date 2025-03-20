@@ -70,11 +70,10 @@ class FlowSetting {
         inputKey.className = 'args-input-key';
         inputKey.textContent = key;
         //值输入框
-        const inputValue = document.createElement('input');
+        const inputValue = document.createElement('textarea');
         inputValue.className = 'args-input';
         inputValue.name = 'input';
         inputValue.placeholder = '{value}表示变量';
-        inputValue.type = 'text';
         //为inputValue生成唯一id:时间戳+随机数
         inputValue.id = Date.now() + Math.floor(Math.random() * 1000);
 
@@ -116,8 +115,10 @@ class FlowSetting {
             oldValue = newValue;
         });
 
+
         item.appendChild(inputKey);
         inputDiv.appendChild(inputValue);
+        autosize(inputDiv.querySelector('.args-input'))
         inputDiv.appendChild(menuContainer);
         item.appendChild(inputDiv);
         return item;
@@ -132,7 +133,7 @@ class FlowSetting {
 
         const block = document.createElement('span');
 
-        const input = document.createElement('input');
+        const input = document.createElement('textarea');
         input.className = 'args-input-list-item';
         input.placeholder = '请输入参数';
         input.style.width = '90%';
@@ -140,6 +141,8 @@ class FlowSetting {
         if (data[i])
             input.value = data[i]
         block.appendChild(input);
+        autosize(block.querySelectorAll('.args-input-list-item'))
+
 
         const removeBtn = document.createElement('span');
         removeBtn.innerHTML = `<svg t="1741500372827" class="icon-remove" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5923" width="200" height="200"><path d="M512 938.666667C276.362667 938.666667 85.333333 747.637333 85.333333 512S276.362667 85.333333 512 85.333333s426.666667 191.029333 426.666667 426.666667-191.029333 426.666667-426.666667 426.666667z m0-64c200.298667 0 362.666667-162.368 362.666667-362.666667S712.298667 149.333333 512 149.333333 149.333333 311.701333 149.333333 512s162.368 362.666667 362.666667 362.666667zM352 480h320a32 32 0 0 1 0 64H352a32 32 0 0 1 0-64z" fill="#000000" p-id="5924"></path></svg>`
@@ -159,7 +162,7 @@ class FlowSetting {
         input.addEventListener('input', () => {
             data.length = 0;
             for (let i = 0; i < matchList.length; i++) {
-                data.push(matchList[i].querySelector('input').value);
+                data.push(matchList[i].querySelector('textarea').value);
             }
             window.parent.DRAPI.emit("update-data", {});
         });

@@ -15,14 +15,17 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "app:dir": "electron-builder --dir",
+    "app:dist": "electron-builder"
   },
   "devDependencies": {
     "@editorjs/simple-image": "^1.6.0",
     "@types/electron": "^1.6.12",
     "@types/node": "^22.10.6",
     "editorjs-table": "^1.4.10",
-    "electron": "^33.3.1"
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8"
   },
   "dependencies": {
     "@calumk/editorjs-codeflask": "^1.0.10",

@@ -24,8 +24,9 @@ class Input {
         const wrapper = document.createElement('div');
         wrapper.classList.add('input-block-div');
 
-        this.input = document.createElement('input');
+        this.input = document.createElement('textarea');
         this.input.classList.add('input-block');
+        console.log(this.data.content);
         this.input.value = this.data.content ? this.data.content : '';
         this.input.placeholder = this.data.placeholder ? this.data.placeholder : '请输入内容';
 
@@ -49,7 +50,10 @@ class Input {
 
 
         wrapper.appendChild(this.input)
+        autosize(wrapper.querySelector('.input-block'));
         wrapper.appendChild(setBtn)
+
+
 
         return wrapper;
     }

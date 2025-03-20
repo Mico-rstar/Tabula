@@ -6,7 +6,6 @@ import MarkerTool from '../editor/inlineTool/inlineTool.mjs';
 import MyBlockTune from '../editor/blockTune/blockTune.mjs';
 import Input from '../editor/block/input.mjs'
 import InlineCode from '../editor/inlineTool/inline-code.mjs';
-import CodeTool from '../editor/block/code.mjs';
 import EditorjsList from '../editor/block/editorjs-list.mjs';
 import Embed from '../editor/block/embed.mjs';
 import Checklist from '../editor/block/checklist.mjs'
@@ -135,7 +134,9 @@ const ws = new MySocket("ws://127.0.0.1:5200/");
 ws.sendMsg({ type: 'test-from-client', data: {} }).then((data) => {
     console.log('服务端回复', data);
 })
-window.ws = ws;
+
+window.parent.ws = ws;
+window.parent.DRAPI.emit('add-node');
 
 
 
@@ -225,7 +226,10 @@ window.parent.DRAPI.recoverFile((dataDir) => {
         })
         window.editor = editor;
         window.parent.flowMaintainer.recover(data.flowEditor, data.flowContainer);
-        window.myRunner.recover(data.runner);
+        window.editor.isReady.then(() => {
+            window.myRunner.recover(data.runner, window.controller, window.editor);
+        });
+
 
     }).catch((error) => {
         console.log('读取文件失败：', error);
@@ -275,6 +279,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     getIDButton.addEventListener('click', async () => {
         console.log('getID')
         const id = editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()).id
+
+        //console.log(editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()))
         //console.log(editor.blocks.getBlockByIndex(editor.blocks.getCurrentBlockIndex()))
         //console.log('id', editor.blocks.getById(id).call('setClickListener', controller));
         //console.log(controller.buttonAPI);
@@ -282,10 +288,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         //console.log(editor.blocks.getBlockByIndex(1))
         //editor.blocks.getBlockByIndex(1).selected = true;
 
-        const defaultBlockData = await editor.blocks.composeBlockData("checklist");
+        const defaultBlockData = await editor.blocks.composeBlockData("alert");
         console.log(defaultBlockData);
-        const index = await getBlockIndexByID(id, editor);
-        console.log(index);
+        // const index = await getBlockIndexByID(id, editor);
+        // console.log(index, id);
+
+        // ws.sendMsg({ type: 'test', data: {} }).then((data) => {
+        //     console.log('服务端回复', data);
+        // })
+
+
     });
 
 

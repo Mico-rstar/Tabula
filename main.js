@@ -95,11 +95,11 @@ const createWindow = () => {
     })
 
     // 打开开发工具
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
-    globalShortcut.register('CmdOrCtrl+shift+I', () => {
-        mainWindow.webContents.openDevTools()
-    })
+    // globalShortcut.register('CmdOrCtrl+shift+I', () => {
+    //     mainWindow.webContents.openDevTools()
+    // })
 }
 
 

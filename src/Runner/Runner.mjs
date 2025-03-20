@@ -1,3 +1,4 @@
+
 export class Runner {
 
     /*
@@ -29,7 +30,7 @@ export class Runner {
         blockType: "button",
         eventType: "click",
         flowId: "flow-1",
-        data:{} //flow setting data
+        params: "params" //flow setting data
     }
     */
     bind(data, controller, editor) {
@@ -47,6 +48,22 @@ export class Runner {
                 break;
         }
         return id;
+    }
+
+    //只绑定事件，不更改map，recover时使用
+    bindOnly(data, controller, editor, bindId) {
+        switch (data.blockType) {
+            case "button":
+                this.bindButtonEvent(data.eventType, controller, editor, data.blockId, bindId);
+                break;
+            case "input":
+                this.bindInputEvent(data.eventType, controller, editor, data.blockId, bindId);
+                break;
+            case "image":
+                this.bindImgEvent(data.eventType, controller, editor, data.blockId, bindId);
+            default:
+                break;
+        }
     }
     removeBind(controller, editor, bindId) {
         console.log(bindId)
@@ -192,6 +209,39 @@ export class Runner {
     //通过后端接口调用被绑定的工作流，并处理返回值
     async callback(event) {
         console.log("Runner", event);
+        const data = window.myRunner.getDataFromMap(event.bindId);
+        let params = await window.myRunner.translateParams(data.params);
+        console.log(params);
+        window.parent.ws.sendMsg({ type: "callWorkflow", params: params, id: data.flowId, insertBlockId:data.insertBlockId }).then((res) => {
+            console.log(res);
+        })
+    }
+
+    async translateParams(params) {
+        //将params中的参数替换为对应的值
+        // 提取所有 URL
+        const urlPattern = /\{([^}]+)\}/g;
+        let match;
+        const urls = [];
+        while ((match = urlPattern.exec(params)) !== null) {
+            urls.push(match[1]);
+        }
+        console.log(params, urls);
+
+        // 转换每个 URL
+        for (const url of urls) {
+
+            let urllist = url.split('.');
+            let content = await window.editor.blocks.getById(urllist[0]).save();
+            for (let i = 1; i < urllist.length; i++) {
+                content = content[urllist[i]];
+            }
+
+            if (content) {
+                params = params.replace(`{${url}}`, content);
+            }
+        }
+        return params;
     }
 
     //调用在加载时应被调用的工作流
@@ -211,7 +261,17 @@ export class Runner {
         return Object.fromEntries(this.map);
     }
 
-    recover(map) {
+    recover(map, controller, editor) {
         this.map = new Map(Object.entries(map));
+        //遍历map
+        for (let [blockId, events] of this.map) {
+            let index = 0;
+            for (let event of events) {
+                console.log("recover", blockId, event);
+                this.bindOnly(event, controller, editor, blockId + "." + index);
+                index++;
+            }
+        }
+
     }
 }

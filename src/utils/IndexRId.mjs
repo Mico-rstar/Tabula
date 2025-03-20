@@ -16,6 +16,7 @@ async function buildIdIndexMap(editor) {
 export async function getBlockIndexByID(id, editor) {
 
     await buildIdIndexMap(editor);
+    console.log('idIndexMap:', idIndexMap);
     if (idIndexMap[id] !== undefined) {
         return idIndexMap[id];
     } else {
